@@ -1,19 +1,26 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
-import appointmentModel from "../models/appointement.js";
-import doctorModel from "../models/Doctor.js";
+import Appointment from "../models/appointment.js";
+import DoctorProfile from "../models/Doctor.js";
 import appError from '../utils/appError.js';
 import httpStatus from "../utils/httpStatus.js";
 
 export const bookAppointment = asyncWrapper(
     async (req, res, next) => {
         const { doctorId, date, timeSlot, reason } = req.body;
-        const doctor = await doctorModel.findOne({ _id: doctorId, role: "doctor" })
-
+        const doctor = await DoctorProfile.findById(doctorId)
         if (!doctor) {
             return next(appError.create("Doctor not found!", 404, httpStatus.FAIL))
         }
+        const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
+        const availableDay = doctor.availability.find(d => d.day === dayName);
+        const slotExists = availableDay?.slots.some(
+            s => `${s.startTime}-${s.endTime}` === timeSlot
+        );
+        if (!slotExists) {
+            return next(appError.create("Invalid time slot for this doctor", 400, httpStatus.FAIL));
+        }
 
-        const existingAppointement = await appointmentModel.findOne({
+        const existingAppointement = await Appointment.findOne({
             doctor: doctorId,
             date: new Date(date),
             timeSlot,
@@ -24,7 +31,7 @@ export const bookAppointment = asyncWrapper(
             return next(appError.create("This time slot is already taken", 400, httpStatus.FAIL))
         }
 
-        const newAppointement = await appointmentModel.create({
+        const newAppointment = await Appointment.create({
             patient: req.user.id,
             doctor: doctorId,
             date,
@@ -36,7 +43,7 @@ export const bookAppointment = asyncWrapper(
         res.status(201).json({
             success: httpStatus.SUCCESS,
             data: {
-                appointment: newAppointement,
+                appointment: newAppointment,
             }
         })
     }
@@ -44,8 +51,13 @@ export const bookAppointment = asyncWrapper(
 
 export const getPatientAppointments = asyncWrapper(
     async (req, res, next) => {
-        const appointments = await appointmentModel.find({ patient: req.user.id })
-            .populate("doctor", "name specialization image").sort("-date")
+        const appointments = await Appointment.find({ patient: req.user.id })
+            .populate({
+                path: "doctor",
+                select: "specialization fees image",
+                populate: { path: "user", select: "name email" }
+            }).sort("-date")
+
         res.status(200).json({
             success: httpStatus.SUCCESS,
             data: appointments
@@ -55,9 +67,15 @@ export const getPatientAppointments = asyncWrapper(
 
 export const getDoctorAppointements = asyncWrapper(
     async (req, res, next) => {
-        const appointments = await appointmentModel.find({
-            doctor: req.user.id,
-            status: { $in: ["confirmed", "completed"] }
+        const doctorProfile = await DoctorProfile.findOne({ user: req.user.id });
+
+        if (!doctorProfile) {
+            return next(appError.create("Doctor profile not found", 404, httpStatus.FAIL));
+        }
+
+        const appointments = await Appointment.find({
+            doctor: doctorProfile._id,
+            status: { $in: ["pending", "confirmed", "completed"] }
         }).populate("patient", "name email image").sort("date")
 
         res.status(200).json({
@@ -69,17 +87,30 @@ export const getDoctorAppointements = asyncWrapper(
 )
 
 export const cancelAppointment = asyncWrapper(async (req, res, next) => {
-    const appointment = await appointmentModel.findById(req.params.id);
+    const appointment = await Appointment.findById(req.params.id);
 
     if (!appointment) return next(appError.create('Appointment not found', 404, httpStatus.FAIL));
 
-    const isOwner = appointment.patient.toString() === req.user.id ||
-        appointment.doctor.toString() === req.user.id;
+    const isPatient = appointment.patient.toString() === req.user.id;
+
+    let isDoctor = false;
+    if (!isPatient) {
+        const doctorProfile = await DoctorProfile.findOne({ user: req.user.id });
+        isDoctor = doctorProfile && appointment.doctor.toString() === doctorProfile._id.toString();
+    }
+
+    const isOwner = isPatient || isDoctor;
 
     if (!isOwner) return next(appError.create('Unauthorized', 403, httpStatus.FAIL));
+
     if (appointment.status === 'completed') return next(appError.create('Cannot cancel a completed visit', 400, httpStatus.FAIL));
 
+    if (appointment.paymentStatus === 'paid') {
+        return next(appError.create('Paid appointments require a refund process', 400, httpStatus.FAIL))
+    }
+
     appointment.status = 'cancelled';
+
     await appointment.save();
 
     res.status(200).json({
