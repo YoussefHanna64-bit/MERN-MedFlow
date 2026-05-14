@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import httpStatus from "../utils/httpStatus.js";
+import appError from '../utils/appError.js';
 
 //All the admin can do for now is banning the users instead of deleting them.
 export const getAllUsers = asyncWrapper(

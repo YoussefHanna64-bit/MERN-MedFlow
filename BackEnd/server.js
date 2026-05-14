@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import authRoute from "./routes/authRoute.js";
+import appointmentRoute from "./routes/appointmentRoute.js";
 import httpStatus from "./utils/httpStatus.js";
 import { connectDB } from "./config/dbconfig.js";
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/user", userRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/appointment", appointmentRoute);
 app.use((req, res, next) => {
   return res.status(404).json({
     status: httpStatus.ERROR,
