@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import userRoute from "./routes/userRoute.js";
 import adminRoute from "./routes/adminRoute.js";
 import authRoute from "./routes/authRoute.js";
+import appointmentRoute from "./routes/appointmentRoute.js";
 import httpStatus from "./utils/httpStatus.js";
 import clinicalRoute from "./routes/clinicalRoute.js";
 import doctorRoute from "./routes/doctorRoute.js";
@@ -23,6 +24,7 @@ app.use("/api/admin", adminRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/clinical", clinicalRoute);
 app.use("/api/doctors", doctorRoute);
+app.use("/api/appointment", appointmentRoute);
 app.use((req, res, next) => {
   return res.status(404).json({
     status: httpStatus.ERROR,

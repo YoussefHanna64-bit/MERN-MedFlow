@@ -1,36 +1,43 @@
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
+import asyncWrapper from "../middlewares/asyncWrapper.js";
+import httpStatus from "../utils/httpStatus.js";
+import appError from "../utils/appError.js";
+
 //All the admin can do for now is banning the users instead of deleting them.
-export const getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find().select("-password");
-    return res
-      .status(200)
-      .json({ success: true, count: users.length, data: { users } });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+export const getAllUsers = asyncWrapper(async (req, res, next) => {
+  const users = await User.find().select("-password");
+  if (!users) {
+    return next(appError.create("Something went wrong", 500, httpStatus.ERROR));
   }
-};
-export const toggleUserStatus = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { $set: { isActive: !user.isActive } },
-      { returnDocument: "after", runValidators: false },
-    );
-    return res.status(200).json({
-      success: true,
-      message: `User status changed to: ${updatedUser.isActive ? "Active" : "Suspended"}`,
-      data: { isActive: updatedUser.isActive },
+  return res
+    .status(200)
+    .json({
+      success: httpStatus.SUCCESS,
+      count: users.length,
+      data: { users },
     });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+});
+export const toggleUserStatus = asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+  if (!id) {
+    return next(appError.create("No Id Provided", 404, httpStatus.FAIL));
   }
-};
+  const user = await User.findById(id);
+  if (!user) {
+    return next(appError.create("User not found", 404, httpStatus.FAIL));
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { $set: { isActive: !user.isActive } },
+    { returnDocument: "after", runValidators: false },
+  );
+  if (!updatedUser) {
+    return next(appError.create("Something went wrong", 500, httpStatus.ERROR));
+  }
+  return res.status(200).json({
+    success: httpStatus.SUCCESS,
+    message: `User status changed to: ${updatedUser.isActive ? "Active" : "Suspended"}`,
+    data: { isActive: updatedUser.isActive },
+  });
+});
