@@ -1,5 +1,5 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
-import Appointment from "../models/appointment.js";
+import Appointment from "../models/appointement.js";
 import DoctorProfile from "../models/Doctor.js";
 import appError from '../utils/appError.js';
 import httpStatus from "../utils/httpStatus.js";

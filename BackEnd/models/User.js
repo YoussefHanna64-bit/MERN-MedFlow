@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt"; // Don't forget to import bcrypt!
+import bcrypt from "bcrypt";
 
 const emailRegx =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -8,7 +8,6 @@ const passwordRegx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 const { Schema } = mongoose;
 
-// 1. Define the Schema fields and options
 const userSchema = new Schema(
   {
     name: {
@@ -19,7 +18,7 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      unique: true, // Simplified: unique doesn't take a custom error message like 'required'
+      unique: true,
       required: [true, "Email is required"],
       match: [emailRegx, "Please provide a valid email"],
     },
@@ -44,12 +43,14 @@ const userSchema = new Schema(
   },
   { timestamps: true }, 
 );
+
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return ;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 
 });
+
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
