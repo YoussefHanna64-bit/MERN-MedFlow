@@ -1,8 +1,9 @@
 import userModel from "../models/User.js";
 import doctorModel from "../models/Doctor.js";
 import httpStatus from "../utils/httpStatus.js";
+import asyncWrapper from "../middlewares/asyncWrapper.js";
 
-export const searchDoctors = async (req, res, next) => {
+export const searchDoctors = asyncWrapper(async (req, res, next) => {
   const { search } = req.query;
 
   let query = {};
@@ -44,4 +45,4 @@ export const searchDoctors = async (req, res, next) => {
     data: { doctors },
     message: "Doctors retrieved  successfully",
   });
-};
+});

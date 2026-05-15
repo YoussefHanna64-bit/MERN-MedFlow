@@ -1,10 +1,11 @@
 import MedicalRecord from "../models/MedicalRecord.js";
 import Prescription from "../models/Prescription.js";
 import httpStatus from "../utils/httpStatus.js";
+import asyncWrapper from "../middlewares/asyncWrapper.js";
 
 //Doctor only
-export const createMedicalRecord = async (req, res, next) => {
-  const doctorId = req.user ? req.user._id : req.body.doctorId; //////////for test
+export const createMedicalRecord = asyncWrapper(async (req, res, next) => {
+  const doctorId = req.user.id;
 
   const { patientId, appointmentId, diagnosis, symptoms, notes } = req.body;
 
@@ -22,10 +23,10 @@ export const createMedicalRecord = async (req, res, next) => {
     data: { record: newRecord },
     message: "Medical record created successfully",
   });
-};
+});
 
 //Patient & Doctor
-export const getPatientRecords = async (req, res, next) => {
+export const getPatientRecords = asyncWrapper(async (req, res, next) => {
   const { patientId } = req.params;
 
   const records = await MedicalRecord.find({ patient: patientId })
@@ -40,10 +41,10 @@ export const getPatientRecords = async (req, res, next) => {
     data: { records },
     message: "Patient records retrieved successfully",
   });
-};
+});
 
-export const generatePrescription = async (req, res, next) => {
-  const doctorId = req.user ? req.user._id : req.body.doctorId; ////////for test
+export const generatePrescription = asyncWrapper(async (req, res, next) => {
+  const doctorId = req.user.id;
 
   const { recordId, patientId, medications, instructions } = req.body;
 
@@ -60,4 +61,4 @@ export const generatePrescription = async (req, res, next) => {
     data: { prescription: newPrescription },
     message: "prescription generated successfully",
   });
-};
+});
