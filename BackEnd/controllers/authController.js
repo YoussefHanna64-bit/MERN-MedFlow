@@ -4,6 +4,21 @@ import Patient from "../models/Patient.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import appError from "../utils/appError.js";
 import httpStatus from "../utils/httpStatus.js";
+import jwt from "jsonwebtoken";
+
+const genrateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRE,
+    },
+  );
+};
 
 export const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
@@ -32,11 +47,13 @@ export const register = asyncWrapper(async (req, res, next) => {
     await Patient.create({ user: user._id, ...profileData });
   }
 
+  const token = genrateToken(user);
+
   const { password: _, ...userWithoutPassword } = user.toObject();
 
   res.status(201).json({
     status: httpStatus.SUCCESS,
-    data: { user: userWithoutPassword },
+    data: { user: userWithoutPassword, token },
   });
 });
 
@@ -64,10 +81,12 @@ export const login = asyncWrapper(async (req, res, next) => {
     );
   }
 
+  const token = genrateToken(user);
+
   const { password: _, ...userWithoutPassword } = user.toObject();
 
   res.status(200).json({
     status: httpStatus.SUCCESS,
-    data: { user: userWithoutPassword },
+    data: { user: userWithoutPassword, token },
   });
 });
