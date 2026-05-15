@@ -31,24 +31,26 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { $set: { name, email, phone } },
-      { returnDocument: 'after', runValidators: true }
-    ).select("-password"); 
+      { returnDocument: "after", runValidators: true },
+    ).select("-password");
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     if (updatedUser.role === "doctor") {
       await Doctor.findOneAndUpdate(
         { user: id },
         { $set: profileData },
-        { returnDocument: 'after', runValidators: true }
+        { returnDocument: "after", runValidators: true },
       );
     } else if (updatedUser.role === "patient") {
       await Patient.findOneAndUpdate(
         { user: id },
         { $set: profileData },
-        { returnDocument: 'after', runValidators: true }
+        { returnDocument: "after", runValidators: true },
       );
     }
 

@@ -16,17 +16,19 @@ export const toggleUserStatus = async (req, res) => {
     const { id } = req.params;
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
     const updatedUser = await User.findByIdAndUpdate(
       id,
-      { $set: { isActive: !user.isActive } }, 
-      { returnDocument: 'after', runValidators: false }
+      { $set: { isActive: !user.isActive } },
+      { returnDocument: "after", runValidators: false },
     );
     return res.status(200).json({
       success: true,
       message: `User status changed to: ${updatedUser.isActive ? "Active" : "Suspended"}`,
-      data: { isActive: updatedUser.isActive }
+      data: { isActive: updatedUser.isActive },
     });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
