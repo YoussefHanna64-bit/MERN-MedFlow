@@ -21,6 +21,8 @@ const userSchema = new Schema(
       unique: true,
       required: [true, "Email is required"],
       match: [emailRegx, "Please provide a valid email"],
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,

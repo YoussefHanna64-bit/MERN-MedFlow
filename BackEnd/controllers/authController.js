@@ -33,6 +33,32 @@ export const register = asyncWrapper(async (req, res, next) => {
     );
   }
 
+  if (role === "doctor") {
+    const { specialization, addresses, fees } = profileData;
+
+    if (!specialization || !addresses || !fees) {
+      return next(
+        appError.create(
+          "Specialization, addresses, and fees are required for doctors",
+          400,
+          httpStatus.FAIL,
+        ),
+      );
+    }
+  } else if (role === "patient") {
+    const { bloodType } = profileData;
+
+    if (!bloodType) {
+      return next(
+        appError.create(
+          "Blood type is required for patients",
+          400,
+          httpStatus.FAIL,
+        ),
+      );
+    }
+  }
+
   const isDuplicate = await User.findOne({ email });
 
   if (isDuplicate) {
