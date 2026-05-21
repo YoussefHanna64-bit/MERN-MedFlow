@@ -20,6 +20,8 @@ const genrateToken = (user) => {
   );
 };
 
+
+
 export const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
 
@@ -82,6 +84,10 @@ export const register = asyncWrapper(async (req, res, next) => {
     data: { user: userWithoutPassword, token },
   });
 });
+
+
+
+
 
 export const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;

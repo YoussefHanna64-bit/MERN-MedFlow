@@ -31,10 +31,6 @@ app.use((req, res, next) => {
     message: "Route not found",
   });
 });
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({
@@ -44,6 +40,10 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(process.env.PORT, () => {
-  console.log("server is running");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
+// app.listen(process.env.PORT, () => {
+//   console.log("server is running");
+// });
