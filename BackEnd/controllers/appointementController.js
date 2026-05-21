@@ -57,10 +57,22 @@ export const getPatientAppointments = asyncWrapper(
                 select: "specialization fees image",
                 populate: { path: "user", select: "name email" }
             }).sort("-date")
-
+        const formatted = appointments.map(appointment => {
+            const doc = appointment.doctor;
+            return {
+                ...appointment.toObject(),
+                doctor: {
+                    _id: doc._id,
+                    name: doc.user.name,
+                    specialization: doc.specialization,
+                    fees: doc.fees,
+                    image: doc.image,
+                }
+            }
+        });
         res.status(200).json({
             success: httpStatus.SUCCESS,
-            data: appointments
+            data: formatted
         })
     }
 )
