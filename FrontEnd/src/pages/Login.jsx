@@ -12,6 +12,7 @@ import InputField from "../components/authComponents/InputField";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { login } from "../redux/slices/authSlice";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -29,14 +30,14 @@ const Login = () => {
     const res = await dispatch(login(loginState));
 
     if (res.meta.requestStatus === "fulfilled") {
-      //toast
+      toast.success("Welcome back to MedFlow!");
       navigate("/home");
       setLoginState({
         email: "",
         password: "",
       });
     } else {
-      //toast
+      toast.error("Invalid email or password");
     }
   };
 

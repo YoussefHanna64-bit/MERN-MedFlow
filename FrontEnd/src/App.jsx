@@ -10,6 +10,7 @@ const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
 const DoctorSignUp = lazy(() => import("./pages/DoctorSignUp"));
+import { Toaster } from "react-hot-toast";
 
 const routerCofig = createBrowserRouter([
   {
@@ -50,6 +51,7 @@ const routerCofig = createBrowserRouter([
 function App() {
   return (
     <div className="h-full">
+      <Toaster />
       <Provider store={doctorAppointmentsStore}>
         <RouterProvider router={routerCofig} />
       </Provider>

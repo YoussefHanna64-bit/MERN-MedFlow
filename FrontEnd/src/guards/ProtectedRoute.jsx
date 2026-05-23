@@ -5,7 +5,7 @@ const ProtectedRoute = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   if (!isAuthenticated) {
-    //toast
+    toast.error("You must be logged in to access this page.");
     return <Navigate to="/login" replace />;
   }
   return <Outlet />;

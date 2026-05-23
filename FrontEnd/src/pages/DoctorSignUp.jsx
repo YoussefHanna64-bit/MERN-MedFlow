@@ -18,6 +18,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { register } from "../redux/slices/authSlice";
 import { createDoctorAuthModel } from "../models/authModels";
+import toast from "react-hot-toast";
 
 const DoctorSignUp = () => {
   const dispatch = useDispatch();
@@ -43,17 +44,17 @@ const DoctorSignUp = () => {
     e.preventDefault();
 
     if (signUpState.name.trim().length < 3) {
-      //toast
+      toast.error("Name must be at least 3 chars");
       return;
     }
 
     if (signUpState.password.length < 8) {
-      //toast
+      toast.error("Password must be at least 8 chars");
       return;
     }
 
     if (signUpState.password !== signUpState.confirmPassword) {
-      //toast
+      toast.error("Passwords don't match");
       return;
     }
 
@@ -61,6 +62,7 @@ const DoctorSignUp = () => {
     const res = await dispatch(register(doctorPayload));
 
     if (res.meta.requestStatus === "fulfilled") {
+      toast.success("Welcome to MedFlow!");
       navigate("/home");
 
       setSignUpState({
@@ -74,9 +76,8 @@ const DoctorSignUp = () => {
         fees: "",
         description: "",
       });
-      
     } else {
-      //toast
+      toast.error("Failed to create account, please try again");
     }
   };
 
