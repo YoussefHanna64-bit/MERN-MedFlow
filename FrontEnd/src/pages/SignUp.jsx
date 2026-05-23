@@ -1,16 +1,82 @@
 import {
   ArrowRight,
+  CalendarDays,
   HeartPulse,
   Lock,
   Mail,
   Phone,
+  VenusAndMars,
   UserRound,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuthGreenPanel from "../components/authComponents/AuthGreenPanel";
 import InputField from "../components/authComponents/InputField";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { register } from "../redux/slices/authSlice";
+import { createPatientAuthModel } from "../models/authModels";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [signUpState, setSignUpState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    bloodType: "",
+    dateOfBirth: "",
+    gender: "",
+    emergencyContact: "",
+  });
+
+  const handleChange = (e) => {
+    setSignUpState({ ...signUpState, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (signUpState.name.trim().length < 3) {
+      //toast
+      return;
+    }
+
+    if (signUpState.password.length < 8) {
+      //toast
+      return;
+    }
+
+    if (signUpState.password !== signUpState.confirmPassword) {
+      //toast
+      return;
+    }
+
+    const patientPayload = createPatientAuthModel(signUpState);
+    const res = await dispatch(register(patientPayload));
+
+    if (res.meta.requestStatus === "fulfilled") {
+      //toast
+      navigate("/home");
+    } else {
+      //toast
+    }
+
+    setSignUpState({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+      bloodType: "",
+      dateOfBirth: "",
+      gender: "",
+      emergencyContact: "",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background px-4 py-6 font-body text-gray-800 sm:px-6 lg:px-8">
       <div className="mx-auto grid min-h-[90vh] max-w-6xl items-center gap-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -27,13 +93,14 @@ const SignUp = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
               label="Name"
               icon={UserRound}
               type="text"
               name="name"
               placeholder="Enter your name"
+              onChange={handleChange}
               required
             />
 
@@ -43,6 +110,7 @@ const SignUp = () => {
               type="email"
               name="email"
               placeholder="email@example.com"
+              onChange={handleChange}
               required
             />
 
@@ -52,6 +120,7 @@ const SignUp = () => {
               type="password"
               name="password"
               placeholder="Create a secure password"
+              onChange={handleChange}
               required
             />
 
@@ -61,6 +130,7 @@ const SignUp = () => {
               type="password"
               name="confirmPassword"
               placeholder="Confirm your password"
+              onChange={handleChange}
               required
             />
 
@@ -70,7 +140,42 @@ const SignUp = () => {
               type="tel"
               name="phone"
               placeholder="01xxxxxxxxx"
+              onChange={handleChange}
               required
+            />
+
+            <InputField
+              label="Date of birth"
+              icon={CalendarDays}
+              type="date"
+              name="dateOfBirth"
+              onChange={handleChange}
+            />
+
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                Gender
+              </label>
+              <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-primary focus-within:bg-white">
+                <select
+                  name="gender"
+                  onChange={handleChange}
+                  className="w-full cursor-pointer bg-transparent text-sm outline-none text-gray-800"
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+            </div>
+
+            <InputField
+              label="Emergency contact"
+              icon={Phone}
+              type="tel"
+              name="emergencyContact"
+              placeholder="Emergency contact phone"
+              onChange={handleChange}
             />
 
             <div className="flex flex-col gap-2">
@@ -80,6 +185,7 @@ const SignUp = () => {
               <div className="rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 focus-within:border-primary focus-within:bg-white">
                 <select
                   name="bloodType"
+                  onChange={handleChange}
                   className="w-full bg-transparent text-sm outline-none text-gray-800 cursor-pointer"
                 >
                   <option value="">Select blood type</option>
@@ -94,8 +200,6 @@ const SignUp = () => {
                 </select>
               </div>
             </div>
-
-            <input type="hidden" name="role" value="patient" />
 
             <button
               type="submit"

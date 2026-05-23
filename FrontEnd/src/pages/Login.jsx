@@ -6,11 +6,41 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import AuthGreenPanel from "../components/authComponents/AuthGreenPanel";
 import InputField from "../components/authComponents/InputField";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { login } from "../redux/slices/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loginState, setLoginState] = useState({ email: "", password: "" });
+
+  const handleChange = (e) => {
+    setLoginState({ ...loginState, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const res = await dispatch(login(loginState));
+
+    if (res.meta.requestStatus === "fulfilled") {
+      //toast
+      navigate("/home");
+    } else {
+      //toast
+    }
+
+    setLoginState({
+      email: "",
+      password: "",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background px-4 py-6 font-body text-gray-800 sm:px-6 lg:px-8">
       <div className="mx-auto grid min-h-[90vh] max-w-6xl items-center gap-6 lg:grid-cols-[1.05fr_0.95fr]">
@@ -50,13 +80,14 @@ const Login = () => {
             </p>
           </div>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <InputField
               label="Email address"
               icon={Mail}
               type="email"
               name="email"
               placeholder="email@example.com"
+              onChange={handleChange}
               required
             />
 
@@ -66,6 +97,7 @@ const Login = () => {
               type="password"
               name="password"
               placeholder="Enter your password"
+              onChange={handleChange}
               required
             />
 

@@ -13,8 +13,72 @@ import {
 import { Link } from "react-router";
 import AuthGreenPanel from "../components/authComponents/AuthGreenPanel";
 import InputField from "../components/authComponents/InputField";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { register } from "../redux/slices/authSlice";
+import { createDoctorAuthModel } from "../models/authModels";
 
 const DoctorSignUp = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [signUpState, setSignUpState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    specialization: "",
+    addresses: "",
+    fees: "",
+    description: "",
+  });
+
+  const handleChange = (e) => {
+    setSignUpState({ ...signUpState, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (signUpState.name.trim().length < 3) {
+      //toast
+      return;
+    }
+
+    if (signUpState.password.length < 8) {
+      //toast
+      return;
+    }
+
+    if (signUpState.password !== signUpState.confirmPassword) {
+      //toast
+      return;
+    }
+
+    const doctorPayload = createDoctorAuthModel(signUpState);
+    const res = await dispatch(register(doctorPayload));
+
+    if (res.meta.requestStatus === "fulfilled") {
+      navigate("/home");
+    } else {
+      //toast
+    }
+
+    setSignUpState({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      phone: "",
+      specialization: "",
+      addresses: "",
+      fees: "",
+      description: "",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background px-4 py-6 font-body text-gray-800 sm:px-6 lg:px-8">
       <div className="mx-auto grid min-h-[90vh] max-w-6xl items-center gap-6 lg:grid-cols-[0.95fr_1.05fr]">
@@ -54,13 +118,14 @@ const DoctorSignUp = () => {
             </p>
           </div>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <InputField
               label="Name"
               icon={UserRound}
               type="text"
               name="name"
               placeholder="Enter your name"
+              onChange={handleChange}
               required
             />
 
@@ -70,6 +135,7 @@ const DoctorSignUp = () => {
               type="email"
               name="email"
               placeholder="email@example.com"
+              onChange={handleChange}
               required
             />
             <InputField
@@ -78,6 +144,7 @@ const DoctorSignUp = () => {
               type="password"
               name="password"
               placeholder="Create a secure password"
+              onChange={handleChange}
               required
             />
 
@@ -87,6 +154,7 @@ const DoctorSignUp = () => {
               type="password"
               name="confirmPassword"
               placeholder="Confirm your password"
+              onChange={handleChange}
               required
             />
 
@@ -96,6 +164,7 @@ const DoctorSignUp = () => {
               type="tel"
               name="phone"
               placeholder="01xxxxxxxxx"
+              onChange={handleChange}
               required
             />
             <InputField
@@ -104,6 +173,7 @@ const DoctorSignUp = () => {
               type="text"
               name="specialization"
               placeholder="Cardiology"
+              onChange={handleChange}
               required
             />
 
@@ -113,6 +183,7 @@ const DoctorSignUp = () => {
               type="text"
               name="addresses"
               placeholder="Smoha, Alexandria - Heliopolis, Cairo"
+              onChange={handleChange}
               required
             />
 
@@ -122,10 +193,22 @@ const DoctorSignUp = () => {
               type="number"
               name="fees"
               placeholder="500"
+              onChange={handleChange}
               required
             />
 
-            <input type="hidden" name="role" value="doctor" />
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-gray-700">
+                Description
+              </label>
+              <textarea
+                name="description"
+                onChange={handleChange}
+                rows="4"
+                placeholder="Short clinic or professional description"
+                className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm outline-none transition focus:border-primary focus:bg-white resize-none"
+              />
+            </div>
 
             <button
               type="submit"
