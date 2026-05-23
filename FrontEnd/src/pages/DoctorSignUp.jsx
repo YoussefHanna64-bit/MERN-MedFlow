@@ -62,21 +62,22 @@ const DoctorSignUp = () => {
 
     if (res.meta.requestStatus === "fulfilled") {
       navigate("/home");
+
+      setSignUpState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+        specialization: "",
+        addresses: "",
+        fees: "",
+        description: "",
+      });
+      
     } else {
       //toast
     }
-
-    setSignUpState({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-      specialization: "",
-      addresses: "",
-      fees: "",
-      description: "",
-    });
   };
 
   return (

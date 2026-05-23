@@ -5,6 +5,7 @@ import "./App.css";
 import { doctorAppointmentsStore } from "./redux/store/store";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
+import ProtectedRoute from "./guards/ProtectedRoute";
 const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
@@ -16,8 +17,13 @@ const routerCofig = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/home" replace /> },
       {
-        path: "home",
-        element: <DoctorAppointments />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "home",
+            element: <DoctorAppointments />,
+          },
+        ],
       },
     ],
   },
@@ -27,10 +33,6 @@ const routerCofig = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
-      },
-      {
-        index: true,
-        element: <Navigate to="/signup" replace />,
       },
       {
         path: "signup",

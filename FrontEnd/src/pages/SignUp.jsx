@@ -60,21 +60,21 @@ const SignUp = () => {
     if (res.meta.requestStatus === "fulfilled") {
       //toast
       navigate("/home");
+
+      setSignUpState({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        phone: "",
+        bloodType: "",
+        dateOfBirth: "",
+        gender: "",
+        emergencyContact: "",
+      });
     } else {
       //toast
     }
-
-    setSignUpState({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      phone: "",
-      bloodType: "",
-      dateOfBirth: "",
-      gender: "",
-      emergencyContact: "",
-    });
   };
 
   return (

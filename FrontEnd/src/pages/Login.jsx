@@ -31,14 +31,13 @@ const Login = () => {
     if (res.meta.requestStatus === "fulfilled") {
       //toast
       navigate("/home");
+      setLoginState({
+        email: "",
+        password: "",
+      });
     } else {
       //toast
     }
-
-    setLoginState({
-      email: "",
-      password: "",
-    });
   };
 
   return (
