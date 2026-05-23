@@ -2,6 +2,8 @@ import AppointmentCard from "./appointmentCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchDoctorAppointments } from "./../../redux/slices/doctorAppointmentsSlice";
+import Spinner from "../spinner";
+import ErrorMessage from "../ErrorMessage";
 
 const AppointmentCardList = () => {
   const dispatch = useDispatch();
@@ -11,14 +13,21 @@ const AppointmentCardList = () => {
   const appointments = useSelector(
     (state) => state.doctorAppointments.doctorAppointments,
   );
-  ////// check on the role to fetch the correct data
+
   useEffect(() => {
     if (!success) {
       dispatch(fetchDoctorAppointments());
     }
   }, [dispatch, success]);
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  
+  if (loading) return <Spinner />;
+  if (error)
+    return (
+      <ErrorMessage
+        message={error}
+        onRetry={() => dispatch(fetchDoctorAppointments())}
+      />
+    );
   return (
     <>
       <div className="flex flex-col gap-3">
