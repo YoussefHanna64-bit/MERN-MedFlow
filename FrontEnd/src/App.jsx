@@ -6,6 +6,9 @@ import { doctorAppointmentsStore } from "./redux/store/store";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
+const Login = lazy(() => import("./pages/Login"));
+const PatientSignUp = lazy(() => import("./pages/SignUp"));
+const DoctorSignUp = lazy(() => import("./pages/DoctorSignUp"));
 
 const routerCofig = createBrowserRouter([
   {
@@ -20,7 +23,24 @@ const routerCofig = createBrowserRouter([
   },
   {
     element: <AuthLayout />,
-    children: [],
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        index: true,
+        element: <Navigate to="/signup" replace />,
+      },
+      {
+        path: "signup",
+        element: <PatientSignUp />,
+      },
+      {
+        path: "signup/doctor",
+        element: <DoctorSignUp />,
+      },
+    ],
   },
   { path: "*", element: <Navigate to="/home" replace /> },
 ]);
