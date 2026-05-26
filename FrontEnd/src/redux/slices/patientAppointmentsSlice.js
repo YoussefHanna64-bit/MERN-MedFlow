@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import api from "../api";
 
 const API_BASE_URL = "http://localhost:5000/api";
 
@@ -7,7 +8,7 @@ export const fetchPatientAppointments = createAsyncThunk(
     "appointments/fetchPatientAppointments",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/appointment/patient/my-bookings`)
+            const response = await api.get("/appointment/patient/my-bookings");
             return response.data.data;
         } catch (error) {
             return rejectWithValue(
@@ -43,7 +44,7 @@ const patientAppointmentSlice = createSlice({
         ).addCase(fetchPatientAppointments.fulfilled, (state, action) => {
             state.loading = false
             state.success = true
-            state.doctorAppointments = action.payload
+            state.patientAppointments = action.payload
         }
         ).addCase(fetchPatientAppointments.rejected, (state, action) => {
             state.loading = false;
