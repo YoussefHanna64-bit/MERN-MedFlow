@@ -8,6 +8,7 @@ import appointmentRoute from "./routes/appointmentRoute.js";
 import httpStatus from "./utils/httpStatus.js";
 import clinicalRoute from "./routes/clinicalRoute.js";
 import doctorRoute from "./routes/doctorRoute.js";
+import paymentRouter from "./routes/payment.route.js";
 import { connectDB } from "./config/dbconfig.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 dotenv.config();
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/clinical", clinicalRoute);
 app.use("/api/doctors", doctorRoute);
 app.use("/api/appointment", appointmentRoute);
+app.use("/api/payment", paymentRouter)
 app.use((req, res, next) => {
   return res.status(404).json({
     status: httpStatus.ERROR,
