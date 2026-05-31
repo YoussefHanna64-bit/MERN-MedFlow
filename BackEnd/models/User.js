@@ -34,6 +34,7 @@ const userSchema = new Schema(
     },
     phone: {
       type: String,
+      required: [true, "Phone is required"],
       match: [phoneRegx, "Please provide a valid phone number"],
     },
     role: {

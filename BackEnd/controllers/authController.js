@@ -23,16 +23,6 @@ const genrateToken = (user) => {
 export const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
 
-  if (!name || !email || !password || !phone || !role) {
-    return next(
-      appError.create(
-        "Name, email, password, phone, and role are required",
-        400,
-        httpStatus.FAIL,
-      ),
-    );
-  }
-
   if (role === "doctor") {
     const { specialization, addresses, fees } = profileData;
 
