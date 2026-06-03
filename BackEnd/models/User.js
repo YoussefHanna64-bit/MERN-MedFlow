@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 const emailRegx =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const phoneRegx = /^01[0125][0-9]{8}$/;
-const passwordRegx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const passwordRegx = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
 const { Schema } = mongoose;
 
@@ -13,7 +13,7 @@ const userSchema = new Schema(
     name: {
       type: String,
       required: [true, "Name is required"],
-      minlength: [4, "Name must be at least 4 characters long"],
+      minlength: [3, "Name must be at least 3 characters long"],
       maxlength: [20, "Name must be at most 20 characters long"],
     },
     email: {
