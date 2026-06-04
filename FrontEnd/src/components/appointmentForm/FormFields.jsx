@@ -25,13 +25,35 @@ const FormFields = () => {
                 </svg>
               </div>
 
-              <input
-                type="text"
+              <select
                 id="doctor"
-                className="bg-gray-100 border rounded-lg text-base placeholder:text-gray-700 placeholder:font-semibold block w-full pl-10 pr-3 py-2.5 mt-2 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50"
-                placeholder="Dr. Ali Azouz"
+                name="doctor"
+                defaultValue=""
                 required
-              />
+                className="appearance-none bg-gray-100 border rounded-lg text-base block w-full pl-10 pr-10 py-2.5 mt-2 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="" disabled>
+                  Select a doctor
+                </option>
+                <option value="dr-ali-azouz">Dr. Ali Azouz</option>
+                <option value="dr-john-doe">Dr. John Doe</option>
+                <option value="dr-jane-smith">Dr. Jane Smith</option>
+              </select>
+
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-5 w-5 text-gray-400"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.06z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           <div className="w-1/2">
