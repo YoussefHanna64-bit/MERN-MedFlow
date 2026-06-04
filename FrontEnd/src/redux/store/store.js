@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import doctorAppointmentsReducer from './../slices/doctorAppointmentsSlice';
 import patientAppointmentsReducer from './../slices/patientAppointmentsSlice';
+import appointmentFormReducer from './../slices/appointmentFormSlice';
 import authReducer from './../slices/authSlice';
 
 export const doctorAppointmentsStore = configureStore({
@@ -8,6 +9,7 @@ export const doctorAppointmentsStore = configureStore({
         auth: authReducer,
         doctorAppointments: doctorAppointmentsReducer,
         patientAppointments: patientAppointmentsReducer,
+        appointmentForm: appointmentFormReducer,
     },
 });
 
