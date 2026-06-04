@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
