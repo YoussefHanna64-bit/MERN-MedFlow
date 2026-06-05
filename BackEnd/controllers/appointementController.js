@@ -41,6 +41,14 @@ export const bookAppointment = asyncWrapper(
             return next(appError.create("This time slot is already taken", 400, httpStatus.FAIL))
         }
 
+        const availabilityIndex = doctor.availability.findIndex(d => d.day === dayName);
+        const slotIndex = doctor.availability[availabilityIndex].slots.findIndex(
+            s => `${s.startTime}-${s.endTime}` === normalizedTimeSlot
+        );
+
+        doctor.availability[availabilityIndex].slots[slotIndex].status = "full";
+
+        await doctor.save();
         const newAppointment = await Appointment.create({
             patient: req.user.id,
             doctor: doctorId,
@@ -133,8 +141,25 @@ export const cancelAppointment = asyncWrapper(async (req, res, next) => {
     }
 
     appointment.status = 'cancelled';
-
     await appointment.save();
+
+    const doctor = await DoctorProfile.findById(appointment.doctor);
+    if (doctor) {
+        const dayName = new Date(appointment.date).toLocaleDateString('en-US', {
+            weekday: 'long',
+            timeZone: 'UTC'
+        });
+        const availabilityIndex = doctor.availability.findIndex(d => d.day === dayName);
+        if (availabilityIndex !== -1) {
+            const slotIndex = doctor.availability[availabilityIndex].slots.findIndex(
+                s => `${s.startTime}-${s.endTime}` === appointment.timeSlot
+            );
+            if (slotIndex !== -1) {
+                doctor.availability[availabilityIndex].slots[slotIndex].status = "available";
+                await doctor.save();
+            }
+        }
+    }
 
     res.status(200).json({
         success: true,
