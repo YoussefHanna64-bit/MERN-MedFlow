@@ -60,8 +60,7 @@ const SignUp = () => {
 
     if (res.meta.requestStatus === "fulfilled") {
       toast.success("Welcome to MedFlow!");
-      navigate("/home");
-
+      navigate("/patient-home");
       setSignUpState({
         name: "",
         email: "",

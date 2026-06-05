@@ -7,15 +7,25 @@ import httpStatus from "../utils/httpStatus.js";
 export const bookAppointment = asyncWrapper(
     async (req, res, next) => {
         const { doctorId, date, timeSlot, reason } = req.body;
+        console.log(req.body)
         const doctor = await DoctorProfile.findById(doctorId)
         if (!doctor) {
             return next(appError.create("Doctor not found!", 404, httpStatus.FAIL))
         }
-        const dayName = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
+        const dayName = new Date(date).toLocaleDateString('en-US', {
+            weekday: 'long',
+            timeZone: 'UTC'
+        });
         const availableDay = doctor.availability.find(d => d.day === dayName);
-        const slotExists = availableDay?.slots.some(
-            s => `${s.startTime}-${s.endTime}` === timeSlot
+        if (!availableDay) {
+            return next(appError.create(`Doctor is not available on ${dayName}`, 400, httpStatus.FAIL));
+        }
+        const normalizedTimeSlot = timeSlot.replace(/\s*-\s*/, '-');
+
+        const slotExists = availableDay.slots.some(
+            s => `${s.startTime}-${s.endTime}` === normalizedTimeSlot
         );
+
         if (!slotExists) {
             return next(appError.create("Invalid time slot for this doctor", 400, httpStatus.FAIL));
         }
@@ -23,7 +33,7 @@ export const bookAppointment = asyncWrapper(
         const existingAppointement = await Appointment.findOne({
             doctor: doctorId,
             date: new Date(date),
-            timeSlot,
+            timeSlot: normalizedTimeSlot,
             status: { $ne: "cancelled" }
         })
 
@@ -34,12 +44,13 @@ export const bookAppointment = asyncWrapper(
         const newAppointment = await Appointment.create({
             patient: req.user.id,
             doctor: doctorId,
-            date,
-            timeSlot,
+            date: new Date(date),
+            timeSlot: normalizedTimeSlot,
             reason,
             amount: doctor.fees,
             status: "pending",
-        })
+        });
+
         res.status(201).json({
             success: httpStatus.SUCCESS,
             data: {

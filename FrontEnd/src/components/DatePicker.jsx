@@ -1,16 +1,24 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { format } from "date-fns";
 
-const MyDatePicker = () => {
+const MyDatePicker = ({ inputData, setInputData, errors, setErrors }) => {
   const [selected, setSelected] = useState(null);
+  const handleOnSelect = (date) => {
+    setSelected(date);
+    setInputData({ ...inputData, date: format(date, "yyyy-MM-dd") });
+    if (errors["date"]) setErrors({ ...errors, date: "" });
+  };
 
   return (
     <DayPicker
       animate
       mode="single"
       selected={selected}
-      onSelect={setSelected}
+      onSelect={handleOnSelect}
+      disabled={{ before: new Date() }}
+      startMonth={new Date()}
       className="bg-gray-100 rounded-xl p-4 mt-2"
       classNames={{
         month_caption: "text-gray-800 font-semibold",

@@ -16,6 +16,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
+    // origin: "http://localhost:4200",
     origin: "http://localhost:5173",
   }),
 );
@@ -35,6 +36,13 @@ app.use((req, res, next) => {
   });
 });
 
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    status: err.status || httpStatus.ERROR,
+    message: err.message || "Internal Server Error",
+    code: err.statusCode,
+  });
+});
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

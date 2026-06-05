@@ -19,8 +19,8 @@ const AppointmentCardList = () => {
       dispatch(fetchDoctorAppointments());
     }
   }, [dispatch, success]);
-  
-  if (loading) return <Spinner />;
+
+  if (loading) return <Spinner height="h-20" color="border-primary" />;
   if (error)
     return (
       <ErrorMessage
