@@ -4,6 +4,8 @@ import httpStatus from "../utils/httpStatus.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import appError from "../utils/appError.js";
 import Appointment from "../models/appointement.js";
+import { createNotification } from "../utils/createNotification.js";
+
 
 export const searchDoctors = asyncWrapper(async (req, res, next) => {
   const { search } = req.query;
@@ -133,6 +135,12 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
   }
   if (startTimesToCancel.length > 0) {
     const regexPatterns = startTimesToCancel.map((st) => new RegExp(`^${st}-`));
+    const affectedAppointments = await Appointment.find({
+      doctor: doctor._id,
+      date: targetDate,
+      timeSlot: { $in: regexPatterns },
+      status: { $ne: "cancelled" },
+    });
     await Appointment.updateMany(
       {
         doctor: doctor._id,
@@ -142,6 +150,16 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
       },
       { $set: { status: "cancelled" } }
     );
+    const formattedDate = targetDate.toLocaleDateString("en-US", { dateStyle: "medium" });
+    for (const appointment of affectedAppointments) {
+      await createNotification(
+        appointment.patient,
+        userId,              
+        "Appointment Cancelled by Provider ⚠️",
+        `Your appointment on ${formattedDate} during the slot (${appointment.timeSlot}) was cancelled due to a schedule adjustment by the doctor.`,
+        next
+      );
+    }
   }
   await doctor.save();
   res.status(200).json({
