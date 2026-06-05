@@ -6,7 +6,6 @@ import appError from "../utils/appError.js";
 import httpStatus from "../utils/httpStatus.js";
 import jwt from "jsonwebtoken";
 
-
 const genrateToken = (user) => {
   return jwt.sign(
     {
@@ -25,9 +24,9 @@ export const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
 
   if (role === "doctor") {
-    const { specialization, addresses, fees } = profileData;
+    const { specialization, addresses, fees, mainClinic } = profileData;
 
-    if (!specialization || !addresses || !fees) {
+    if (!specialization || !addresses || !fees || !mainClinic) {
       return next(
         appError.create(
           "Specialization, addresses, and fees are required for doctors",

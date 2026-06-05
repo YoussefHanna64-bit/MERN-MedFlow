@@ -1,8 +1,15 @@
 import express from "express";
-import { getUserbyId, updateProfile } from "../controllers/userController.js";
+import {
+  getUserById,
+  updateProfile,
+  getAllUsers,
+} from "../controllers/userController.js";
+import verifyToken from "../middlewares/verifyToken.js";
+import authorize from "../middlewares/authorize.js";
 
 const router = express.Router();
-router.get("/:id", getUserbyId);
-router.patch("/:id", updateProfile);
+router.get("/:id", verifyToken, getUserById);
+router.patch("/:id", verifyToken, updateProfile);
+router.get("/", verifyToken, authorize("admin"), getAllUsers);
 
 export default router;

@@ -39,20 +39,31 @@ export const searchDoctors = asyncWrapper(async (req, res, next) => {
   });
 });
 
-export const getDoctor = asyncWrapper(async (req, res, next) => {
-  const doctor = await doctorModel
-    .findOne({ user: req.user.id })
-    .populate("user", "name email image");
-  if (!doctor) {
-    return next(appError.create("Doctor not found!", 404, httpStatus.FAIL));
-  }
+export const getAllDoctors = asyncWrapper(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const doctors = await doctorModel.find()
+    .populate("user", "name email phone role")
+    .select("-__v")                            
+    .skip(skip)
+    .limit(limit);
+
+  const totalDoctors = await doctorModel.countDocuments();
+
   res.status(200).json({
-    success: httpStatus.success,
-    data: { doctor },
-    message: "Doctor retrieved  successfully",
+    success:  httpStatus.SUCCESS,
+    count: doctors.length,
+    pagination: {
+      totalDoctors,
+      currentPage: page,
+      totalPages: Math.ceil(totalDoctors / limit),
+      hasNextPage: page * limit < totalDoctors,
+    },
+    data: { doctors },
+    message: "Doctors retrieved successfully",
   });
 });
-
 export const manageAvailability = asyncWrapper(async (req, res, next) => {
   const userId = req.user.id;
   const { action, date, day, location, slots, startTime } = req.body;

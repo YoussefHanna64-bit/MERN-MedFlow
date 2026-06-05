@@ -3,22 +3,31 @@ import Doctor from "../models/Doctor.js";
 import Patient from "../models/Patient.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import appError from "../utils/appError.js";
+import httpStatus from "../utils/httpStatus.js";
 
-export const getUserbyId = asyncWrapper(async (req, res, next) => {
+export const getUserById = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+
+  const user = await User.findById(id).select("-password -__v");
+
   if (!user) {
     return next(appError.create("User not found!", 404, httpStatus.FAIL));
   }
-  let profile;
+
+  let profile = null;
   if (user.role === "doctor") {
-    profile = await Doctor.findOne({ user: user._id });
-  } else {
-    profile = await Patient.findOne({ user: user._id });
+    profile = await Doctor.findOne({ user: user._id }).select("-__v");
+  } else if (user.role === "patient") {
+    profile = await Patient.findOne({ user: user._id }).select("-__v");
   }
+
   res.status(200).json({
-    success: true,
-    data: { user, profile },
+    success: httpStatus.SUCCESS,
+    data: {
+      user,
+      profile,
+    },
+    message: "User profile details retrieved successfully",
   });
 });
 export const updateProfile = asyncWrapper(
@@ -56,3 +65,27 @@ export const updateProfile = asyncWrapper(
     });
   },
 );
+export const getAllUsers = asyncWrapper(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const users = await User.find()
+    .select("-password -__v")
+    .skip(skip)
+    .limit(limit)
+    .sort("-createdAt");
+  const totalUsers = await User.countDocuments();
+
+  res.status(200).json({
+    sucess: true,
+    count: users.length,
+    pagination: {
+      totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+      hasNextPage: page * limit < totalUsers,
+    },
+    data: { users },
+    message: "Users retrieved successfully",
+  });
+});
