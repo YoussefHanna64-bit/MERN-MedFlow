@@ -4,7 +4,10 @@ import Spinner from "../spinner";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
 
-const FormSummary = ({ inputData }) => {
+const FormSummary = ({ inputData, doctors = [] }) => {
+  const selectedDoctor = doctors.find((doc) => doc._id === inputData.doctorId);
+  const consultationFee = selectedDoctor?.fees ?? 0;
+  const labServiceFee = 50;
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector(
     (state) => state.appointmentForm,
@@ -42,15 +45,21 @@ const FormSummary = ({ inputData }) => {
           </label>
           <div className="mt-10 flex justify-between items-center">
             <span className="text-gray-700">Consultation Fee</span>
-            <span className="text-primary text-2xl font-bold">$125.00</span>
+            <span className="text-primary text-2xl font-bold">
+              {consultationFee ? `${consultationFee} EGP` : "—"}
+            </span>
           </div>
           <div className="mt-10 flex justify-between items-center">
             <span className="text-gray-700">Lab Service Deposite</span>
-            <span className="text-gray700 font-semibold">$45.00</span>
+            <span className="text-gray700 font-semibold">
+              {labServiceFee} EGP
+            </span>
           </div>
           <div className="mt-10 flex justify-between items-center">
             <span className="text-gray-700 font-semibold">Estimated Total</span>
-            <span className="text-gray700 font-semibold text-xl">$170.00</span>
+            <span className="text-gray700 font-semibold text-xl">
+              {consultationFee ? `${consultationFee + labServiceFee} EGP` : "—"}
+            </span>
           </div>
           <div className="mt-10 flex justify-center">
             <button
