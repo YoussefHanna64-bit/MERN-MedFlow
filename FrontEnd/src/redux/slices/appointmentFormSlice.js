@@ -15,10 +15,26 @@ export const bookAppointment = createAsyncThunk(
     }
 )
 
+export const getAllDoctors = createAsyncThunk(
+    "form/doctors",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await api.get("/doctors");
+            console.log(response);
+            return response.data.data.doctors;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Failed to fetch doctors"
+            );
+        }
+    }
+)
+
 const appointmentFormSlice = createSlice({
     name: "appointmentFormFields",
     initialState: {
         appointment: null,
+        doctors: [],
         loading: false,
         error: null,
         success: false,
@@ -49,7 +65,19 @@ const appointmentFormSlice = createSlice({
             .addCase(bookAppointment.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            });
+            }).addCase(getAllDoctors.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getAllDoctors.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action.payload)
+                state.doctors = action.payload;
+            })
+            .addCase(getAllDoctors.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
     }
 })
 

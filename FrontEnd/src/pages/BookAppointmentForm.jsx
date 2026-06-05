@@ -2,18 +2,25 @@ import FormFields from "../components/appointmentForm/FormFields";
 import FormHeader from "../components/appointmentForm/FormHeader";
 import FormSummary from "../components/appointmentForm/FormSummary";
 import appointImg from "../assets/appointImg.svg";
-import { useState } from "react";
-import { useLocation } from "react-router";// 1. Import useLocation
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllDoctors } from "../redux/slices/appointmentFormSlice";
 
 const BookAppointmentForm = () => {
-
-  // 2. Safely extract the doctor object (if the user navigated here from the Find Doctor page)
-  const location = useLocation(); 
+  const dispatch = useDispatch();
+  const { doctors = [], loading } = useSelector(
+    (state) => state.appointmentForm,
+  );
+  const location = useLocation();
   const passedDoctor = location.state?.selectedDoctor;
 
-  // 3. Pre-fill the doctorId if we have one!
+  useEffect(() => {
+    dispatch(getAllDoctors());
+  }, [dispatch]);
+
   const [inputData, setInputData] = useState({
-    doctorId: passedDoctor ? passedDoctor._id : "", 
+    doctorId: passedDoctor ? passedDoctor._id : "",
     reason: "",
     date: "",
     timeSlot: "",
@@ -32,11 +39,16 @@ const BookAppointmentForm = () => {
               backgroundSize: "500px",
             }}
           >
-            {/* 4. Optional: Pass the doctor object to FormHeader or FormFields if you want to display their name! */}
-            <FormHeader doctor={passedDoctor} /> 
-            <FormFields inputData={inputData} setInputData={setInputData} doctor={passedDoctor} />
+            <FormHeader />
+            <FormFields
+              inputData={inputData}
+              setInputData={setInputData}
+              passedDoctor={passedDoctor}
+              doctors={doctors}
+              loading={loading}
+            />
           </div>
-          <FormSummary inputData={inputData} />
+          <FormSummary inputData={inputData} doctors={doctors} />
         </div>
       </div>
     </>
