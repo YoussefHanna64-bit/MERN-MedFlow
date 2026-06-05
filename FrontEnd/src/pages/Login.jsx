@@ -31,7 +31,7 @@ const Login = () => {
 
     if (res.meta.requestStatus === "fulfilled") {
       toast.success("Welcome back to MedFlow!");
-      navigate("/home");
+      navigate("/patient-home");
       setLoginState({
         email: "",
         password: "",

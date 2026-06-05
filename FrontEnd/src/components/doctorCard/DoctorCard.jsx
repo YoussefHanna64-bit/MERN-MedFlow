@@ -1,13 +1,22 @@
+import { useNavigate } from 'react-router'; // 1. Import useNavigate
+
 const DoctorCard = ({ doctor }) => {
+  const navigate = useNavigate(); // 2. Initialize the hook
+
   const hasAvailability = doctor.availability && doctor.availability.length > 0;
+  
   const primaryAddress =
     doctor.addresses && doctor.addresses.length > 0
       ? doctor.addresses[0]
       : "Clinic address unlisted";
 
+  // 3. Create the click handler
+  const handleBookVisit = () => {
+    // Navigate to your booking route and attach the doctor object hidden in the state
+    navigate('/book-appointment', { state: { selectedDoctor: doctor } });
+  };
   return (
     <div className="doctor-card">
-      {/* Card Header: Image + Name + Rating */}
       <div className="card-header">
         <img
           src={
@@ -47,13 +56,12 @@ const DoctorCard = ({ doctor }) => {
 
       {/* Card Footer: Status + Action */}
       <div className="card-footer">
-        <span
-          className={`status-badge ${hasAvailability ? "available" : "busy"}`}
-        >
-          {hasAvailability ? "Available" : "Busy"}
+       <span className={`status-badge ${hasAvailability ? "available" : "busy"}`}>
+          {hasAvailability ? 'Available' : 'Busy'}
         </span>
 
-        <button className="book-btn" disabled={!hasAvailability}>
+        {/* 4. Attach the onClick event to your button */}
+        <button className="book-btn" disabled={!hasAvailability} onClick={handleBookVisit}>
           Book Visit
         </button>
       </div>

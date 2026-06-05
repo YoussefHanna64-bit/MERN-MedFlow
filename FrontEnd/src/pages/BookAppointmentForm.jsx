@@ -3,14 +3,22 @@ import FormHeader from "../components/appointmentForm/FormHeader";
 import FormSummary from "../components/appointmentForm/FormSummary";
 import appointImg from "../assets/appointImg.svg";
 import { useState } from "react";
+import { useLocation } from "react-router";// 1. Import useLocation
 
 const BookAppointmentForm = () => {
+
+  // 2. Safely extract the doctor object (if the user navigated here from the Find Doctor page)
+  const location = useLocation(); 
+  const passedDoctor = location.state?.selectedDoctor;
+
+  // 3. Pre-fill the doctorId if we have one!
   const [inputData, setInputData] = useState({
-    doctorId: "",
+    doctorId: passedDoctor ? passedDoctor._id : "", 
     reason: "",
     date: "",
     timeSlot: "",
   });
+
   return (
     <>
       <div className="bg-background min-h-screen p-16 font-body">
@@ -24,8 +32,9 @@ const BookAppointmentForm = () => {
               backgroundSize: "500px",
             }}
           >
-            <FormHeader />
-            <FormFields inputData={inputData} setInputData={setInputData} />
+            {/* 4. Optional: Pass the doctor object to FormHeader or FormFields if you want to display their name! */}
+            <FormHeader doctor={passedDoctor} /> 
+            <FormFields inputData={inputData} setInputData={setInputData} doctor={passedDoctor} />
           </div>
           <FormSummary inputData={inputData} />
         </div>
