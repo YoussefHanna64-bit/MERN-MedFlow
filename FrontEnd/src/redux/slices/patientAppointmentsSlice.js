@@ -1,8 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
 import api from "../api";
-
-const API_BASE_URL = "http://localhost:5000/api";
 
 export const fetchPatientAppointments = createAsyncThunk(
     "appointments/fetchPatientAppointments",
@@ -17,6 +14,8 @@ export const fetchPatientAppointments = createAsyncThunk(
         }
     }
 )
+
+
 
 const patientAppointmentSlice = createSlice({
     name: "PatientAppointments",

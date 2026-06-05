@@ -6,11 +6,12 @@ import { doctorAppointmentsStore } from "./redux/store/store";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./guards/ProtectedRoute";
-const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
 const DoctorSignUp = lazy(() => import("./pages/DoctorSignUp"));
 import { Toaster } from "react-hot-toast";
+const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
+const BookAppointmentForm = lazy(() => import("./pages/BookAppointmentForm"));
 
 const routerCofig = createBrowserRouter([
   {
@@ -22,7 +23,7 @@ const routerCofig = createBrowserRouter([
         children: [
           {
             path: "home",
-            element: <DoctorAppointments />,
+            element: <BookAppointmentForm />,
           },
         ],
       },

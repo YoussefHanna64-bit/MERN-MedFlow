@@ -6,6 +6,7 @@ import appError from "../utils/appError.js";
 import httpStatus from "../utils/httpStatus.js";
 import jwt from "jsonwebtoken";
 
+
 const genrateToken = (user) => {
   return jwt.sign(
     {
