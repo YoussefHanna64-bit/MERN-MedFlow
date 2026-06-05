@@ -11,5 +11,5 @@ const router = express.Router();
 
 router.get("/search", verifyToken, searchDoctors);
 router.patch("/", verifyToken, authorize("doctor"), manageAvailability);
-router.get("/", verifyToken,authorize("admin"), getAllDoctors);
+router.get("/", getAllDoctors);
 export default router;
