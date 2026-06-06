@@ -45,16 +45,17 @@ export const getAllDoctors = asyncWrapper(async (req, res, next) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
   const skip = (page - 1) * limit;
-  const doctors = await doctorModel.find()
+  const doctors = await doctorModel
+    .find()
     .populate("user", "name email phone role")
-    .select("-__v")                            
+    .select("-__v")
     .skip(skip)
     .limit(limit);
 
   const totalDoctors = await doctorModel.countDocuments();
 
   res.status(200).json({
-    success:  httpStatus.SUCCESS,
+    success: httpStatus.SUCCESS,
     count: doctors.length,
     pagination: {
       totalDoctors,
@@ -66,6 +67,7 @@ export const getAllDoctors = asyncWrapper(async (req, res, next) => {
     message: "Doctors retrieved successfully",
   });
 });
+
 export const manageAvailability = asyncWrapper(async (req, res, next) => {
   const userId = req.user.id;
   const { action, date, day, location, slots, startTime } = req.body;
@@ -73,27 +75,46 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
     return next(appError.create("Date is required.", 400, httpStatus.FAIL));
   }
   if (!["update", "cancel"].includes(action)) {
-    return next(appError.create("Invalid action. Use 'update' or 'cancel'.", 400, httpStatus.FAIL));
+    return next(
+      appError.create(
+        "Invalid action. Use 'update' or 'cancel'.",
+        400,
+        httpStatus.FAIL,
+      ),
+    );
   }
   const targetDate = new Date(date);
   const doctor = await doctorModel.findOne({ user: userId });
   if (!doctor) {
-    return next(appError.create("Doctor profile not found.", 404, httpStatus.FAIL));
+    return next(
+      appError.create("Doctor profile not found.", 404, httpStatus.FAIL),
+    );
   }
   const dayIndex = doctor.availability.findIndex(
-    (item) => item.date.toISOString().split("T")[0] === targetDate.toISOString().split("T")[0]
+    (item) =>
+      item.date.toISOString().split("T")[0] ===
+      targetDate.toISOString().split("T")[0],
   );
 
-  const prevSlots = dayIndex !== -1 ? [...doctor.availability[dayIndex].slots] : [];
+  const prevSlots =
+    dayIndex !== -1 ? [...doctor.availability[dayIndex].slots] : [];
   let startTimesToCancel = [];
   if (action === "update") {
     if (!slots || !Array.isArray(slots)) {
-      return next(appError.create("Slots array required for update.", 400, httpStatus.FAIL));
+      return next(
+        appError.create(
+          "Slots array required for update.",
+          400,
+          httpStatus.FAIL,
+        ),
+      );
     }
 
     if (dayIndex !== -1) {
-      doctor.availability[dayIndex].day = day || doctor.availability[dayIndex].day;
-      doctor.availability[dayIndex].location = location || doctor.availability[dayIndex].location;
+      doctor.availability[dayIndex].day =
+        day || doctor.availability[dayIndex].day;
+      doctor.availability[dayIndex].location =
+        location || doctor.availability[dayIndex].location;
       doctor.availability[dayIndex].slots = slots;
     } else {
       doctor.availability.push({
@@ -105,28 +126,44 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
     }
     if (dayIndex !== -1) {
       const newStartTimes = slots.map((s) => s.startTime);
-      const removed = prevSlots.filter((s) => !newStartTimes.includes(s.startTime));
+      const removed = prevSlots.filter(
+        (s) => !newStartTimes.includes(s.startTime),
+      );
       if (removed.length > 0) {
         startTimesToCancel = removed.map((s) => s.startTime);
       }
     }
-  }
-  else if (action === "cancel") {
+  } else if (action === "cancel") {
     if (!startTime) {
-      return next(appError.create("StartTime is required to cancel a slot.", 400, httpStatus.FAIL));
+      return next(
+        appError.create(
+          "StartTime is required to cancel a slot.",
+          400,
+          httpStatus.FAIL,
+        ),
+      );
     }
 
     if (dayIndex === -1) {
-      return next(appError.create("No schedule found for this date.", 404, httpStatus.FAIL));
+      return next(
+        appError.create(
+          "No schedule found for this date.",
+          404,
+          httpStatus.FAIL,
+        ),
+      );
     }
 
     const originalLength = doctor.availability[dayIndex].slots.length;
-    doctor.availability[dayIndex].slots = doctor.availability[dayIndex].slots.filter(
-      (slot) => slot.startTime !== startTime
-    );
+    doctor.availability[dayIndex].slots = doctor.availability[
+      dayIndex
+    ].slots.filter((slot) => slot.startTime !== startTime);
 
     if (doctor.availability[dayIndex].slots.length === originalLength) {
-      return res.status(204).json({ success: httpStatus.SUCCESS, message: "Slot already removed." });
+      return res.status(204).json({
+        success: httpStatus.SUCCESS,
+        message: "Slot already removed.",
+      });
     }
     startTimesToCancel.push(startTime);
     if (doctor.availability[dayIndex].slots.length === 0) {
@@ -148,7 +185,7 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
         timeSlot: { $in: regexPatterns },
         status: { $ne: "cancelled" },
       },
-      { $set: { status: "cancelled" } }
+      { $set: { status: "cancelled" } },
     );
     const formattedDate = targetDate.toLocaleDateString("en-US", { dateStyle: "medium" });
     for (const appointment of affectedAppointments) {

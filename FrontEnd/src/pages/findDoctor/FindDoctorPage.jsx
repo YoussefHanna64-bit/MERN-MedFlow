@@ -1,66 +1,38 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "../../components/searchbar/SearchBar";
 import DoctorCard from "../../components/doctorCard/DoctorCard";
 import "./FindDoctorPage.css";
+import {
+  searchDoctors,
+  setDoctorSearchQuery,
+} from "../../redux/slices/doctorSlice";
 
 const FindDoctorPage = () => {
+  const dispatch = useDispatch();
   const [searchInput, setSearchInput] = useState("");
   const [isSearched, setIsSearched] = useState(false);
 
-  const [allDoctors, setAllDoctors] = useState([]);
-  const [filteredDoctors, setFilteredDoctors] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const doctors = useSelector((state) => state.doctor.doctors);
+  const isLoading = useSelector((state) => state.doctor.loading);
+  const error = useSelector((state) => state.doctor.error);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        setIsLoading(true);
-        const res = await axios.get("http://localhost:5000/api/doctors");
-        const fetchedDoctors = res.data.data.doctors;
-
-        setAllDoctors(fetchedDoctors);
-        setFilteredDoctors(fetchedDoctors);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to fetch doctors:", err);
-        setError(
-          "Could not load doctors. Please ensure the backend server is running on port 5000.",
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchDoctors();
-  }, []);
+    dispatch(searchDoctors());
+  }, [dispatch]);
 
   const handleSearch = () => {
-    if (!searchInput.trim()) {
-      setFilteredDoctors(allDoctors);
-      setIsSearched(false);
-      return;
-    }
-
-    const searchTerm = searchInput.toLowerCase();
-    const results = allDoctors.filter((doc) => {
-      const nameMatch =
-        doc.user && doc.user.name.toLowerCase().includes(searchTerm);
-      const specMatch =
-        doc.specialization &&
-        doc.specialization.toLowerCase().includes(searchTerm);
-      return nameMatch || specMatch;
-    });
-
-    setFilteredDoctors(results);
-    setIsSearched(true);
+    const input = searchInput.trim();
+    dispatch(searchDoctors(input));
+    dispatch(setDoctorSearchQuery(input));
+    setIsSearched(!!input);
   };
 
   const handleReset = () => {
     setSearchInput("");
-    setFilteredDoctors(allDoctors);
     setIsSearched(false);
+    dispatch(setDoctorSearchQuery(""));
+    dispatch(searchDoctors());
   };
 
   return (
@@ -75,7 +47,7 @@ const FindDoctorPage = () => {
       />
 
       <div className="results-container">
-        <h3 className="results-header">Results ({filteredDoctors.length})</h3>
+        <h3 className="results-header">Results ({doctors.length})</h3>
 
         {isLoading && (
           <p className="loading-text">Loading doctors from database...</p>
@@ -84,13 +56,13 @@ const FindDoctorPage = () => {
 
         {!isLoading && !error && (
           <div className="doctors-grid">
-            {filteredDoctors.map((doctor) => (
+            {doctors.map((doctor) => (
               <DoctorCard key={doctor._id} doctor={doctor} />
             ))}
           </div>
         )}
 
-        {!isLoading && !error && filteredDoctors.length === 0 && (
+        {!isLoading && !error && doctors.length === 0 && (
           <p className="no-results">No doctors match your search criteria.</p>
         )}
       </div>

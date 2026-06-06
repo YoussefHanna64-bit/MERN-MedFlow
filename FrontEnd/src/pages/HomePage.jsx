@@ -1,45 +1,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDoctors } from "../redux/slices/doctorSlice";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const doctors = useSelector((state) => state.doctor.doctors);
+  const isLoading = useSelector((state) => state.doctor.loading);
+  const error = useSelector((state) => state.doctor.error);
 
-  // --- State for our dynamic team members ---
-  const [teamDoctors, setTeamDoctors] = useState([]);
-  const [isLoadingTeam, setIsLoadingTeam] = useState(true);
-
-  // --- Fetch doctors on page load ---
   useEffect(() => {
-    const fetchTeam = async () => {
-      try {
-        setIsLoadingTeam(true);
-        const res = await axios.get("http://localhost:5000/api/doctors");
-        // Grab only the first 6 doctors for the homepage display
-        const fetchedDoctors = res.data.data.doctors.slice(0, 6);
-        setTeamDoctors(fetchedDoctors);
-      } catch (err) {
-        console.error("Failed to fetch doctors for homepage:", err);
-      } finally {
-        setIsLoadingTeam(false);
-      }
-    };
+    dispatch(fetchDoctors({ limit: 6 }));
+  }, [dispatch]);
 
-    fetchTeam();
-  }, []);
-
-  // --- Fallback images for doctors without photos ---
-  // --- Expanded Fallback images for doctors without photos ---
   const fallbackImages = [
-    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=300&auto=format&fit=crop", // Male doctor in scrubs
-    "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=300&auto=format&fit=crop", // Male doctor portrait
-    "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=300&auto=format&fit=crop", // Male doctor in white coat
-    "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?q=80&w=300&auto=format&fit=crop", // Female doctor with mask
-    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop", // Professional male headshot
-    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=300&auto=format&fit=crop", // Male doctor outdoors
+    "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1582750433449-648ed127bb54?q=80&w=300&auto=format&fit=crop",
   ];
 
   const services = [
@@ -291,7 +274,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* ----------------- MEET OUR TEAM ----------------- */}
       <div className="max-w-6xl mx-auto px-6 py-20 text-center bg-[#EAEAEA] rounded-[3rem] my-10">
         <h2 className="text-3xl md:text-4xl font-bold text-[#008484] mb-4">
           Meet our team members
@@ -301,20 +283,21 @@ const HomePage = () => {
           compassionate approach to patient care.
         </p>
 
-        {isLoadingTeam ? (
+        {isLoading ? (
           <p className="text-[#008484] font-semibold animate-pulse">
             Loading amazing doctors...
           </p>
-        ) : teamDoctors.length === 0 ? (
+        ) : error ? (
+          <p className="text-gray-500">{error}</p>
+        ) : doctors.length === 0 ? (
           <p className="text-gray-500">No doctors available at the moment.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamDoctors.map((doc, index) => (
+            {doctors.map((doc, index) => (
               <div
                 key={doc._id || index}
                 className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col items-center text-center transition-transform hover:-translate-y-2 hover:shadow-xl"
               >
-                {/* Doctor Avatar */}
                 <img
                   src={
                     doc.image &&
