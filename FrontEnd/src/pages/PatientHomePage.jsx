@@ -4,7 +4,7 @@ import FindDoctor from "../components/homeComponents/FindDoctor";
 import MeetOurTeam from "../components/homeComponents/MeetOurTeam";
 import Services from "../components/homeComponents/Services";
 import Stats from "../components/homeComponents/Stats";
-import { fetchDoctors } from "../redux/slices/doctorSlice";
+import { fetchDoctors } from "../redux/thunks/doctor/fetchDoctors";
 
 const PatientHomePage = () => {
   const { user } = useSelector((state) => state.auth);
