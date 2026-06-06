@@ -1,62 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../api";
+import { fetchDoctors } from "../thunks/doctor/fetchDoctors";
+import { searchDoctors } from "../thunks/doctor/searchDoctors";
+import { updateDoctorAvailability } from "../thunks/doctor/updateAvailability";
 
-export const fetchDoctors = createAsyncThunk(
-  "doctor/fetchDoctors",
-  async (params = {}, { rejectWithValue }) => {
-    const { page, limit } = params;
-
-    try {
-      const queryParams = new URLSearchParams();
-
-      if (limit) {
-        queryParams.append("limit", limit);
-      }
-
-      if (page) {
-        queryParams.append("page", page);
-      }
-
-      const url = `/doctors?${queryParams.toString()}`;
-
-      const response = await api.get(url);
-      return response.data.data.doctors;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch doctors",
-      );
-    }
-  },
-);
-
-export const searchDoctors = createAsyncThunk(
-  "doctor/searchDoctors",
-  async (searchQuery = "", { rejectWithValue }) => {
-    try {
-      const response = await api.get(`/doctors/search?search=${searchQuery}`);
-      return response.data.data.doctors;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message ||
-          "No doctors found matching your search",
-      );
-    }
-  },
-);
-
-export const updateDoctorAvailability = createAsyncThunk(
-  "doctor/updateDoctorAvailability",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const response = await api.patch("/doctors", payload);
-      return response.data.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to update availability",
-      );
-    }
-  },
-);
 
 const doctorSlice = createSlice({
   name: "doctor",
