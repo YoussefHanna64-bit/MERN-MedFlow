@@ -16,6 +16,13 @@ export const createDoctorAuthModel = (formState) => ({
   password: formState.password,
   phone: formState.phone?.trim(),
   role: "doctor",
+  mainClinic: formState.mainClinic?.trim(),
+  assistant_phones: formState.assistantPhones
+    ? formState.assistantPhones
+        .split(",")
+        .map((phone) => phone.trim())
+        .filter(Boolean)
+    : [],
   specialization: formState.specialization?.trim(),
   addresses: formState.addresses
     .split("-")

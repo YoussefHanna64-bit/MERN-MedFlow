@@ -30,6 +30,8 @@ const DoctorSignUp = () => {
     password: "",
     confirmPassword: "",
     phone: "",
+    mainClinic: "",
+    assistantPhones: "",
     specialization: "",
     addresses: "",
     fees: "",
@@ -71,6 +73,8 @@ const DoctorSignUp = () => {
         password: "",
         confirmPassword: "",
         phone: "",
+        mainClinic: "",
+        assistantPhones: "",
         specialization: "",
         addresses: "",
         fees: "",
@@ -168,6 +172,25 @@ const DoctorSignUp = () => {
               placeholder="01xxxxxxxxx"
               onChange={handleChange}
               required
+            />
+            <InputField
+              label="Main clinic"
+              icon={MapPin}
+              type="text"
+              name="mainClinic"
+              placeholder="Main clinic location"
+              value={signUpState.mainClinic}
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Assistant phones"
+              icon={Phone}
+              type="text"
+              name="assistantPhones"
+              placeholder="01xxxxxxxxx, 01xxxxxxxxx"
+              value={signUpState.assistantPhones}
+              onChange={handleChange}
             />
             <InputField
               label="Specialization"
