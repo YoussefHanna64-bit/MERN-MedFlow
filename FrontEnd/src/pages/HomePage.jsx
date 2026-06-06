@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDoctors } from "../redux/slices/doctorSlice";
-
+import { fetchDoctors } from "../redux/thunks/doctor/fetchDoctors";
 const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
