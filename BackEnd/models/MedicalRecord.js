@@ -17,7 +17,7 @@ const mdeicalRecordSchema = new Schema(
     appointment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Appointment",
-    }, // P1 will make this model
+    }, 
     diagnosis: {
       type: String,
       required: [true, "Diagnosis is required"],

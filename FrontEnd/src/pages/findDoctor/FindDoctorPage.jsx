@@ -3,10 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "../../components/searchbar/SearchBar";
 import DoctorCard from "../../components/doctorCard/DoctorCard";
 import "./FindDoctorPage.css";
-import {
-  searchDoctors,
-  setDoctorSearchQuery,
-} from "../../redux/slices/doctorSlice";
+import { searchDoctors } from "../../redux/thunks/doctor/searchDoctors";
+import { setDoctorSearchQuery } from "../../redux/slices/doctorSlice";
 
 const FindDoctorPage = () => {
   const dispatch = useDispatch();
