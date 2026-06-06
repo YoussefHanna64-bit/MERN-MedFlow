@@ -62,7 +62,6 @@ const FormFields = ({
   return (
     <>
       <div className="flex flex-col h-full justify-between">
-        {/* Main Form Fields Layout */}
         <div>
           <div className="flex gap-5 mt-12">
             <div className="w-1/2">

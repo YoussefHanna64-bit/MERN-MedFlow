@@ -1,22 +1,30 @@
 import AppointmentCard from "./appointmentCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchDoctorAppointments } from "./../../redux/slices/doctorAppointmentsSlice";
+import {
+  fetchDoctorAppointments,
+  fetchPatientAppointments,
+} from "./../../redux/slices/userAppointmentsSlice";
 import Spinner from "../spinner";
 import ErrorMessage from "../ErrorMessage";
 
 const AppointmentCardList = () => {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.doctorAppointments.loading);
-  const error = useSelector((state) => state.doctorAppointments.error);
-  const success = useSelector((state) => state.doctorAppointments.success);
+  const { role } = useSelector((state) => state.auth);
+  const loading = useSelector((state) => state.userAppointments.loading);
+  const error = useSelector((state) => state.userAppointments.error);
+  const success = useSelector((state) => state.userAppointments.success);
   const appointments = useSelector(
-    (state) => state.doctorAppointments.doctorAppointments,
+    (state) => state.userAppointments.userAppointments ?? [],
   );
 
   useEffect(() => {
     if (!success) {
-      dispatch(fetchDoctorAppointments());
+      if (role == "doctor") {
+        dispatch(fetchDoctorAppointments());
+      } else {
+        dispatch(fetchPatientAppointments());
+      }
     }
   }, [dispatch, success]);
 
@@ -30,9 +38,20 @@ const AppointmentCardList = () => {
     );
   return (
     <>
-      <div className="flex flex-col gap-3">
-        {appointments.map((appointment) => (
-          <AppointmentCard key={appointment.id} appointment={appointment} />
+      {appointments.length == 0 && (
+        <div className="bg-primary/50 p-2 rounded-b-xl text-center">
+          <span className="font-semibold">
+            There is no upcoming appointments for you!
+          </span>
+        </div>
+      )}
+      <div>
+        {appointments.map((appointment, index) => (
+          <AppointmentCard
+            key={appointment._id}
+            appointment={appointment}
+            isLast={index === appointments.length - 1}
+          />
         ))}
       </div>
     </>
