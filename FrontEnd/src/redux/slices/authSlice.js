@@ -50,6 +50,7 @@ const authSlice = createSlice({
   initialState: {
     user: storedAuth?.user || null,
     token: storedAuth?.token || null,
+    role: storedAuth?.user?.role || null,
     isAuthenticated: Boolean(storedAuth?.token),
     loading: false,
     error: null,
@@ -61,6 +62,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.role = null;
       state.error = null;
       state.success = false;
     },
@@ -79,6 +81,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.role = action.payload.user.role;
       state.isAuthenticated = true;
       state.success = true;
     });
