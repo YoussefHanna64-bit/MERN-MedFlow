@@ -6,19 +6,6 @@ import appError from "../utils/appError.js";
 import {createNotification} from "../utils/createNotification.js";
 
 //All the admin can do for now is banning the users instead of deleting them.
-export const getAllUsers = asyncWrapper(async (req, res, next) => {
-  const users = await User.find().select("-password");
-  if (!users) {
-    return next(appError.create("Something went wrong", 500, httpStatus.ERROR));
-  }
-  return res
-    .status(200)
-    .json({
-      success: httpStatus.SUCCESS,
-      count: users.length,
-      data: { users },
-    });
-});
 export const toggleUserStatus = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
   if (!id) {

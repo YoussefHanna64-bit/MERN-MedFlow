@@ -20,8 +20,6 @@ const genrateToken = (user) => {
   );
 };
 
-
-
 export const register = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
 
@@ -31,7 +29,7 @@ export const register = asyncWrapper(async (req, res, next) => {
     if (!specialization || !addresses || !fees || !mainClinic) {
       return next(
         appError.create(
-          "Specialization, addresses, and fees are required for doctors",
+          "Specialization, addresses, fees, and main clinic are required for doctors",
           400,
           httpStatus.FAIL,
         ),
@@ -74,10 +72,6 @@ export const register = asyncWrapper(async (req, res, next) => {
     data: { user: userWithoutPassword, token },
   });
 });
-
-
-
-
 
 export const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;

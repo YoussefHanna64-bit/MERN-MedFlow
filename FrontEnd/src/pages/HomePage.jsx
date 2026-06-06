@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDoctors } from "../redux/slices/doctorSlice";
+import {fetchDoctors} from "../redux/thunks/doctor/fetchDoctors";
 import Testimonials from "../components/homeComponents/Testimonials";
 import TrustedCenters from "../components/homeComponents/TrustedCenters";
 import MeetOurTeam from "../components/homeComponents/MeetOurTeam";

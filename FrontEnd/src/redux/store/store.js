@@ -5,6 +5,7 @@ import patientAppointmentsReducer from './../slices/patientAppointmentsSlice';
 import appointmentFormReducer from './../slices/appointmentFormSlice';
 import authReducer from './../slices/authSlice';
 import medicalRecordReducer from '../slices/medicalRecordSlice';
+import adminReducer from './../slices/adminSlice';
 
 export const doctorAppointmentsStore = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const doctorAppointmentsStore = configureStore({
         patientAppointments: patientAppointmentsReducer,
         appointmentForm: appointmentFormReducer,
         medicalRecords: medicalRecordReducer,
+        admin: adminReducer
     },
 });
 
