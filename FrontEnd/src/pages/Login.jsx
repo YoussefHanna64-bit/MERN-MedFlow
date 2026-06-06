@@ -31,7 +31,15 @@ const Login = () => {
 
     if (res.meta.requestStatus === "fulfilled") {
       toast.success("Welcome back to MedFlow!");
-      navigate("/patient-home");
+
+      const role = res.payload.user.role;
+
+      if (role === "patient") {
+        navigate("/patient-home");
+      } else if (role === "doctor") {
+        navigate("/doctor-appointments");
+      }
+
       setLoginState({
         email: "",
         password: "",
