@@ -2,6 +2,8 @@ import MedicalRecord from "../models/MedicalRecord.js";
 import Prescription from "../models/Prescription.js";
 import httpStatus from "../utils/httpStatus.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
+import appError from "../utils/appError.js";
+import {createNotification} from "../utils/createNotification.js";
 
 //Doctor only
 export const createMedicalRecord = asyncWrapper(async (req, res, next) => {
@@ -17,6 +19,13 @@ export const createMedicalRecord = asyncWrapper(async (req, res, next) => {
     symptoms,
     notes,
   });
+  await createNotification(
+    patientId,
+    doctorId,
+    "New Medical Record Added 📄",
+    `Your consultation summary for your recent visit has been published. Diagnosis: ${diagnosis}.`,
+    next,
+  );
 
   res.status(201).json({
     success: httpStatus.SUCCESS,
@@ -55,6 +64,14 @@ export const generatePrescription = asyncWrapper(async (req, res, next) => {
     medications,
     instructions,
   });
+  const medCount = Array.isArray(medications) ? medications.length : 1;
+  await createNotification(
+    patientId,
+    doctorId,
+    "Digital Prescription Issued 💊",
+    `Your doctor has generated a digital prescription containing ${medCount} item(s).`,
+    next,
+  );
 
   res.status(201).json({
     success: httpStatus.SUCCESS,

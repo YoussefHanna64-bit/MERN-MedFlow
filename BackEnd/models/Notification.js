@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const medicalNotificationSchema = new Schema(
+const Notification = new Schema(
   {
     recipient: {
       type: mongoose.Schema.Types.ObjectId,
@@ -34,6 +34,6 @@ const medicalNotificationSchema = new Schema(
 );
 
 // Indexing by recipient so fetching a user's inbox remains lightning fast
-medicalNotificationSchema.index({ recipient: 1, isRead: 1 });
+Notification.index({ recipient: 1, isRead: 1 });
 
-export default mongoose.model("Notification", medicalNotificationSchema);
+export default mongoose.model("Notification", Notification);

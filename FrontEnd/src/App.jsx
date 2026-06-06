@@ -18,7 +18,6 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const PatientHomePage = lazy(() => import("./pages/PatientHomePage"));
 
 const routerCofig = createBrowserRouter([
-  // 1. Force the absolute base URL to send users directly to Login
   {
     path: "/",
     element: <Navigate to="/login" replace />,
@@ -26,14 +25,12 @@ const routerCofig = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
-      // 1. Landing page is unprotected and publicly visible!
       { index: true, element: <HomePage /> },
       {
-        // 2. Everything inside here requires a login!
         element: <ProtectedRoute />,
         children: [
           {
-            path: "patient-home", // Add this right here!
+            path: "patient-home",
             element: <PatientHomePage />,
           },
           {
@@ -69,7 +66,6 @@ const routerCofig = createBrowserRouter([
       },
     ],
   },
-  // 3. Catch-all for wrong URLs now boots people back to the login page
   { path: "*", element: <Navigate to="/login" replace /> },
 ]);
 
