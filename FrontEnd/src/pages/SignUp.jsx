@@ -210,12 +210,12 @@ const SignUp = () => {
             </button>
           </form>
 
-          <Link
+          {/* <Link
             to="/signup/doctor"
             className="mt-4 flex w-full items-center justify-center rounded-2xl border border-primary px-5 py-3 text-sm font-semibold text-primary transition hover:bg-primary/10"
           >
             Join us as doctor
-          </Link>
+          </Link> */}
 
           <p className="mt-8 text-center text-sm text-gray-500">
             Already have an account?
