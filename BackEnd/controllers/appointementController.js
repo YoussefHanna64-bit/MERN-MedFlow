@@ -94,13 +94,28 @@ export const bookAppointment = asyncWrapper(async (req, res, next) => {
 });
 
 export const getPatientAppointments = asyncWrapper(async (req, res, next) => {
-  const appointments = await Appointment.find({ patient: req.user.id })
+  const now = new Date();
+
+  await Appointment.updateMany(
+    {
+      patient: req.user.id,
+      date: { $lt: now },
+      status: { $in: ["pending", "confirmed"] }
+    },
+    { $set: { status: "expired" } }
+  );
+
+  const appointments = await Appointment.find({
+    patient: req.user.id,
+    date: { $gte: now }
+  })
     .populate({
       path: "doctor",
       select: "specialization fees image",
       populate: { path: "user", select: "name email" },
     })
-    .sort("-date");
+    .sort("date");
+
   const formatted = appointments.map((appointment) => {
     const doc = appointment.doctor;
     return {
@@ -114,6 +129,7 @@ export const getPatientAppointments = asyncWrapper(async (req, res, next) => {
       },
     };
   });
+
   res.status(200).json({
     success: httpStatus.SUCCESS,
     data: formatted,
@@ -129,8 +145,20 @@ export const getDoctorAppointements = asyncWrapper(async (req, res, next) => {
     );
   }
 
+  const now = new Date();
+
+  await Appointment.updateMany(
+    {
+      doctor: doctorProfile._id,
+      date: { $lt: now },
+      status: { $in: ["pending", "confirmed"] }
+    },
+    { $set: { status: "expired" } }
+  );
+
   const appointments = await Appointment.find({
     doctor: doctorProfile._id,
+    date: { $gte: now },
     status: { $in: ["pending", "confirmed", "completed"] },
   })
     .populate("patient", "name email image")
@@ -143,7 +171,6 @@ export const getDoctorAppointements = asyncWrapper(async (req, res, next) => {
 });
 
 export const cancelAppointment = asyncWrapper(async (req, res, next) => {
-  // Populate the doctor base data early so we can know who they are for our notifications
   const appointment = await Appointment.findById(req.params.id)
     .populate({
       path: "doctor",
@@ -186,6 +213,26 @@ export const cancelAppointment = asyncWrapper(async (req, res, next) => {
 
   appointment.status = "cancelled";
   await appointment.save();
+  const doctor = await DoctorProfile.findById(appointment.doctor._id);
+  if (doctor) {
+    const dayName = new Date(appointment.date).toLocaleDateString("en-US", {
+      weekday: "long",
+      timeZone: "UTC",
+    });
+
+    const availabilityIndex = doctor.availability.findIndex((d) => d.day === dayName);
+
+    if (availabilityIndex !== -1) {
+      const slotIndex = doctor.availability[availabilityIndex].slots.findIndex(
+        (s) => `${s.startTime}-${s.endTime}` === appointment.timeSlot
+      );
+
+      if (slotIndex !== -1) {
+        doctor.availability[availabilityIndex].slots[slotIndex].status = "available";
+        await doctor.save();
+      }
+    }
+  }
 
   const formattedDate = new Date(appointment.date).toLocaleDateString("en-US", {
     dateStyle: "medium",
