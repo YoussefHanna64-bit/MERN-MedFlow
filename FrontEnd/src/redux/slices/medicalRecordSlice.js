@@ -6,7 +6,7 @@ export const fetchPatientRecords = createAsyncThunk(
   "medicalRecords/fetchPatientRecords",
   async (patientId, { rejectWithValue }) => {
     try {
-      const response = await api.get(`/records/patient/${patientId}`);
+const response = await api.get(`/clinical/records/${patientId}`);
       return response.data.data.records;
     } catch (error) {
       return rejectWithValue(
