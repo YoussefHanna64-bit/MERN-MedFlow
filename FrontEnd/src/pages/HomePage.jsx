@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {fetchDoctors} from "../redux/thunks/doctor/fetchDoctors";
+import { fetchDoctors } from "../redux/thunks/doctor/fetchDoctors";
 import Testimonials from "../components/homeComponents/Testimonials";
 import TrustedCenters from "../components/homeComponents/TrustedCenters";
 import MeetOurTeam from "../components/homeComponents/MeetOurTeam";
@@ -11,30 +11,32 @@ import WhyChooseUs from "../components/homeComponents/WhyChooseUs";
 import FindDoctor from "../components/homeComponents/FindDoctor";
 
 const HomePage = () => {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  const doctors = useSelector((state) => state.doctor.doctors);
-  const isLoading = useSelector((state) => state.doctor.loading);
-  const error = useSelector((state) => state.doctor.error);
+	const doctors = useSelector((state) => state.doctor.doctors);
+	const isLoading = useSelector((state) => state.doctor.loading);
+	const error = useSelector((state) => state.doctor.error);
 
-  useEffect(() => {
-    dispatch(fetchDoctors({ limit: 6 }));
-  }, [dispatch]);
+	useEffect(() => {
+		dispatch(fetchDoctors({ limit: 6 }));
+	}, [dispatch]);
 
-  return (
-    <div className="min-h-screen bg-[#F4F6F5] font-body relative overflow-hidden pb-20">
-      <Hero />
-      <FindDoctor />
-      <Stats />
-      <WhyChooseUs />
-      <Services />
+	return (
+		<div className="min-h-screen bg-[#F4F6F5] font-body relative overflow-hidden pb-20">
+			<Hero />
+			<FindDoctor />
+			<Stats />
+			<WhyChooseUs />
+			<div id="service">
+				<Services />
+			</div>
 
-      <MeetOurTeam doctors={doctors} isLoading={isLoading} error={error} />
+			<MeetOurTeam doctors={doctors} isLoading={isLoading} error={error} />
 
-      <Testimonials />
-      <TrustedCenters />
-    </div>
-  );
+			<Testimonials />
+			<TrustedCenters />
+		</div>
+	);
 };
 
 export default HomePage;

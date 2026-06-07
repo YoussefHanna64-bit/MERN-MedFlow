@@ -8,6 +8,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./guards/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import PatientAppointments from "./pages/PatientAppointments";
+import Payment from "./pages/Payment";
 
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
@@ -55,6 +56,10 @@ const routerCofig = createBrowserRouter([
             path: "patient-records",
             element: <PatientRecordsPage />,
           },
+          {
+            path: "payment",
+            element: <Payment/>
+          }
         ],
       },
     ],

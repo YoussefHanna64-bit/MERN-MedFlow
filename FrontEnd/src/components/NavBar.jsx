@@ -16,13 +16,13 @@ export default function NavBar() {
 				</div>
 				<div className="lg:col-span-2 flex justify-evenly text-lg font-medium md:col-span-4 sm:col-span-4">
 					<div className="text-[#007E85]">
-						<NavLink to="/home">Home</NavLink>
+						<NavLink to="/">Home</NavLink>
 					</div>
 					<div>
-						<NavLink to="">Service</NavLink>
+						<a href="#service">Service</a>
 					</div>
 					<div>
-						<NavLink to="">Contact Us</NavLink>
+						<a href="#footer">Contact Us</a>
 					</div>
 					<div>
 						<NavLink to="">Help</NavLink>
@@ -42,7 +42,13 @@ export default function NavBar() {
 					</div>
 				) : (
 					<div className="flex gap-3 justify-center lg:col-span-1 md:col-span-4 sm:col-span-4">
-						<Button onClick={()=>dispatch(logout())} size="lg" className="font-bold rounded-md cursor-pointer">Logout</Button>
+						<Button
+							onClick={() => dispatch(logout())}
+							size="lg"
+							className="font-bold rounded-md cursor-pointer"
+						>
+							Logout
+						</Button>
 					</div>
 				)}
 			</div>
