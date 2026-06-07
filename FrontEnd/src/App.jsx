@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import { Provider } from "react-redux";
 import "./App.css";
-import { doctorAppointmentsStore } from "./redux/store/store";
+import { clinicalSystemStore } from "./redux/store/store";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import ProtectedRoute from "./guards/ProtectedRoute";
@@ -18,6 +18,7 @@ const FindDoctorPage = lazy(() => import("./pages/findDoctor/FindDoctorPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const PatientHomePage = lazy(() => import("./pages/PatientHomePage"));
 const PatientRecordsPage = lazy(() => import("./pages/PatientRecordsPage"));
+const UpdateProfilePage = lazy(() => import("./pages/UpdateProfilePage"));
 
 const routerCofig = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ const routerCofig = createBrowserRouter([
             path: "patient-records",
             element: <PatientRecordsPage />,
           },
+          {
+            path: "update-profile",
+            element: <UpdateProfilePage />,
+          },
         ],
       },
     ],
@@ -83,7 +88,7 @@ function App() {
   return (
     <div className="h-full">
       <Toaster />
-      <Provider store={doctorAppointmentsStore}>
+      <Provider store={clinicalSystemStore}>
         <RouterProvider router={routerCofig} />
       </Provider>
     </div>
