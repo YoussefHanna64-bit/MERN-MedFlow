@@ -21,32 +21,18 @@ const genrateToken = (user) => {
 };
 
 export const register = asyncWrapper(async (req, res, next) => {
-  const { name, email, password, phone, role, ...profileData } = req.body;
+  const { name, email, password, phone, ...profileData } = req.body;
 
-  if (role === "doctor") {
-    const { specialization, addresses, fees, mainClinic } = profileData;
+  const { bloodType } = profileData;
 
-    if (!specialization || !addresses || !fees || !mainClinic) {
-      return next(
-        appError.create(
-          "Specialization, addresses, fees, and main clinic are required for doctors",
-          400,
-          httpStatus.FAIL,
-        ),
-      );
-    }
-  } else if (role === "patient") {
-    const { bloodType } = profileData;
-
-    if (!bloodType) {
-      return next(
-        appError.create(
-          "Blood type is required for patients",
-          400,
-          httpStatus.FAIL,
-        ),
-      );
-    }
+  if (!bloodType) {
+    return next(
+      appError.create(
+        "Blood type is required for patients",
+        400,
+        httpStatus.FAIL,
+      ),
+    );
   }
 
   const isDuplicate = await User.findOne({ email });
@@ -55,13 +41,15 @@ export const register = asyncWrapper(async (req, res, next) => {
     return next(appError.create("User already exists", 409, httpStatus.FAIL));
   }
 
-  const user = await User.create({ name, email, password, phone, role });
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    role: "patient",
+  });
 
-  if (role === "doctor") {
-    await Doctor.create({ user: user._id, ...profileData });
-  } else if (role === "patient") {
-    await Patient.create({ user: user._id, ...profileData });
-  }
+  await Patient.create({ user: user._id, ...profileData });
 
   const token = genrateToken(user);
 
