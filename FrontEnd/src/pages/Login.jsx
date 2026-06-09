@@ -39,7 +39,9 @@ const Login = () => {
       } else if (role === "doctor") {
         navigate("/doctor-appointments");
       }
-
+      else if (role === "admin") {
+        navigate("/admin-dashboard");
+      }
       setLoginState({
         email: "",
         password: "",

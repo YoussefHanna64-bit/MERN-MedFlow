@@ -9,6 +9,7 @@ import ProtectedRoute from "./guards/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import PatientAppointments from "./pages/PatientAppointments";
 import Payment from "./pages/Payment";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
@@ -63,8 +64,12 @@ const routerCofig = createBrowserRouter([
           },
           {
             path: "payment",
-            element: <Payment/>
-          }
+            element: <Payment />,
+          },
+          {
+            path: "admin-dashboard",
+            element: <AdminDashboard />,
+          },
         ],
       },
     ],

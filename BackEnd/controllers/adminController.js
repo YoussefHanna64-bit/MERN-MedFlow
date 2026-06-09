@@ -50,3 +50,20 @@ export const toggleUserStatus = asyncWrapper(async (req, res, next) => {
     data: { isActive: updatedUser.isActive },
   });
 });
+export const getDashboardStats = asyncWrapper(async (req, res, next) => {
+  const [totalUsers, totalDoctors, totalBanned] = await Promise.all([
+    User.countDocuments({}),
+    User.countDocuments({ role: "doctor" }),
+    User.countDocuments({ isActive: false }),
+  ]);
+
+  return res.status(200).json({
+    success: httpStatus.SUCCESS,
+    message: "Dashboard analytics compiled successfully.",
+    data: {
+      totalUsers,
+      totalDoctors,
+      totalBanned,
+    },
+  });
+});
