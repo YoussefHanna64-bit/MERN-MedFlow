@@ -14,6 +14,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 const Login = lazy(() => import("./pages/Login"));
 const PatientSignUp = lazy(() => import("./pages/SignUp"));
 const DoctorSignUp = lazy(() => import("./pages/DoctorSignUp"));
+const AdminSignUp = lazy(() => import("./pages/AdminSignUp"));
 const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
 const BookAppointmentForm = lazy(() => import("./pages/BookAppointmentForm"));
 const FindDoctorPage = lazy(() => import("./pages/findDoctor/FindDoctorPage"));
@@ -69,6 +70,16 @@ const routerCofig = createBrowserRouter([
           {
             path: "admin-dashboard",
             element: <AdminDashboard />,
+            children: [
+              {
+                path: "signup/doctor",
+                element: <DoctorSignUp />,
+              },
+              {
+                path: "signup/admin",
+                element: <AdminSignUp />,
+              },
+            ],
           },
         ],
       },
@@ -84,10 +95,6 @@ const routerCofig = createBrowserRouter([
       {
         path: "signup",
         element: <PatientSignUp />,
-      },
-      {
-        path: "signup/doctor",
-        element: <DoctorSignUp />,
       },
     ],
   },

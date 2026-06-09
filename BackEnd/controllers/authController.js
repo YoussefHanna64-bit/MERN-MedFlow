@@ -55,7 +55,13 @@ export const register = asyncWrapper(async (req, res, next) => {
     return next(appError.create("User already exists", 409, httpStatus.FAIL));
   }
 
-  const user = await User.create({ name, email, password, phone, role });
+  const user = await User.create({
+    name,
+    email,
+    password,
+    phone,
+    role,
+  });
 
   if (role === "doctor") {
     await Doctor.create({ user: user._id, ...profileData });

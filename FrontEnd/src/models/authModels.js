@@ -31,3 +31,11 @@ export const createDoctorAuthModel = (formState) => ({
   fees: Number(formState.fees),
   description: formState.description?.trim() || undefined,
 });
+
+export const createAdminAuthModel = (formState) => ({
+  name: formState.name?.trim(),
+  email: formState.email?.trim().toLowerCase(),
+  password: formState.password,
+  phone: formState.phone?.trim(),
+  role: "admin",
+});
