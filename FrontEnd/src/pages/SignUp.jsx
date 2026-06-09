@@ -5,7 +5,6 @@ import {
   Lock,
   Mail,
   Phone,
-  VenusAndMars,
   UserRound,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
@@ -37,6 +36,11 @@ const SignUp = () => {
     setSignUpState({ ...signUpState, [e.target.name]: e.target.value });
   };
 
+  const emailRegx =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const phoneRegx = /^01[0125][0-9]{8}$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -47,6 +51,28 @@ const SignUp = () => {
 
     if (signUpState.password.length < 8) {
       toast.error("Password must be at least 8 chars");
+      return;
+    }
+
+    if (!emailRegx.test(signUpState.email)) {
+      toast.error("Please provide a valid email");
+      return;
+    }
+
+    if (!phoneRegx.test(signUpState.phone)) {
+      toast.error("Please provide a valid phone number");
+      return;
+    }
+
+    if (!phoneRegx.test(signUpState.emergencyContact)) {
+      toast.error("Please provide a valid emergency contact phone number");
+      return;
+    }
+
+    if (!passwordRegex.test(signUpState.password)) {
+      toast.error(
+        "Password must be at least 8 characters and include uppercase, lowercase, number and special character",
+      );
       return;
     }
 
