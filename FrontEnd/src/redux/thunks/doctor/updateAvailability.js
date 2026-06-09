@@ -1,6 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api";
-import axios from "axios";
+
 export const updateDoctorAvailability = createAsyncThunk(
   "doctor/updateDoctorAvailability",
   async (payload, { rejectWithValue }) => {

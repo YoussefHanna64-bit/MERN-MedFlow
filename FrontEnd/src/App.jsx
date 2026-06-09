@@ -16,6 +16,9 @@ const PatientSignUp = lazy(() => import("./pages/SignUp"));
 const DoctorSignUp = lazy(() => import("./pages/DoctorSignUp"));
 const AdminSignUp = lazy(() => import("./pages/AdminSignUp"));
 const DoctorAppointments = lazy(() => import("./pages/DoctorAppointments"));
+const DoctorAvailabilityPage = lazy(
+  () => import("./pages/DoctorAvailabilityPage"),
+);
 const BookAppointmentForm = lazy(() => import("./pages/BookAppointmentForm"));
 const FindDoctorPage = lazy(() => import("./pages/findDoctor/FindDoctorPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -50,6 +53,10 @@ const routerCofig = createBrowserRouter([
           {
             path: "doctor-appointments",
             element: <DoctorAppointments />,
+          },
+          {
+            path: "doctor-availability",
+            element: <DoctorAvailabilityPage />,
           },
           {
             path: "patient-appointments",
