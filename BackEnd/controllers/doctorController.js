@@ -6,7 +6,6 @@ import appError from "../utils/appError.js";
 import Appointment from "../models/appointement.js";
 import { createNotification } from "../utils/createNotification.js";
 
-
 export const searchDoctors = asyncWrapper(async (req, res, next) => {
   const { search } = req.query;
 
@@ -187,14 +186,16 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
       },
       { $set: { status: "cancelled" } },
     );
-    const formattedDate = targetDate.toLocaleDateString("en-US", { dateStyle: "medium" });
+    const formattedDate = targetDate.toLocaleDateString("en-US", {
+      dateStyle: "medium",
+    });
     for (const appointment of affectedAppointments) {
       await createNotification(
         appointment.patient,
-        userId,              
+        userId,
         "Appointment Cancelled by Provider ⚠️",
         `Your appointment on ${formattedDate} during the slot (${appointment.timeSlot}) was cancelled due to a schedule adjustment by the doctor.`,
-        next
+        next,
       );
     }
   }
@@ -203,5 +204,22 @@ export const manageAvailability = asyncWrapper(async (req, res, next) => {
     success: httpStatus.SUCCESS,
     message: `Availability successfully modified via action: ${action}`,
     data: doctor.availability,
+  });
+});
+
+export const getDoctorProfile = asyncWrapper(async (req, res, next) => {
+  const userId = req.user.id;
+  const doctor = await doctorModel.findOne({ user: userId }).populate("user");
+
+  if (!doctor) {
+    return next(
+      appError.create("Doctor profile not found.", 404, httpStatus.FAIL),
+    );
+  }
+
+  res.status(200).json({
+    success: httpStatus.SUCCESS,
+    data: { profile: doctor },
+    message: "Doctor profile retrieved successfully",
   });
 });

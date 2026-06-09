@@ -3,7 +3,7 @@ import api from "../api";
 import { fetchDoctors } from "../thunks/doctor/fetchDoctors";
 import { searchDoctors } from "../thunks/doctor/searchDoctors";
 import { updateDoctorAvailability } from "../thunks/doctor/updateAvailability";
-
+import { fetchDoctorAvailability } from "../thunks/doctor/fetchDoctorAvailability";
 
 const doctorSlice = createSlice({
   name: "doctor",
@@ -56,6 +56,22 @@ const doctorSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
       state.doctors = [];
+      state.success = false;
+    });
+    ////////////////////////////////////////////////
+    builder.addCase(fetchDoctorAvailability.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    });
+    builder.addCase(fetchDoctorAvailability.fulfilled, (state, action) => {
+      state.loading = false;
+      state.availability = action.payload;
+      state.success = true;
+    });
+    builder.addCase(fetchDoctorAvailability.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
       state.success = false;
     });
     ////////////////////////////////////////////////
