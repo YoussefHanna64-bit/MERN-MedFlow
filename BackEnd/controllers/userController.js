@@ -4,6 +4,7 @@ import Patient from "../models/Patient.js";
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import appError from "../utils/appError.js";
 import httpStatus from "../utils/httpStatus.js";
+import { updateDoctorEmbedding } from "../utils/ragService.js";
 
 export const getUserById = asyncWrapper(async (req, res, next) => {
   const { id } = req.params;
@@ -46,11 +47,15 @@ export const updateProfile = asyncWrapper(
     }
 
     if (updatedUser.role === "doctor") {
-      await Doctor.findOneAndUpdate(
+      const updatedDoctor = await Doctor.findOneAndUpdate(
         { user: id },
         { $set: profileData },
         { returnDocument: "after", runValidators: true },
       );
+
+      if (updatedDoctor) {
+        updateDoctorEmbedding(updatedUser, updatedDoctor);
+      }
     } else if (updatedUser.role === "patient") {
       await Patient.findOneAndUpdate(
         { user: id },

@@ -4,6 +4,7 @@ import asyncWrapper from "../middlewares/asyncWrapper.js";
 import httpStatus from "../utils/httpStatus.js";
 import appError from "../utils/appError.js";
 import { createNotification } from "../utils/createNotification.js";
+import { updateDoctorEmbedding } from "../utils/ragService.js";
 
 export const createStaff = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
@@ -40,6 +41,8 @@ export const createStaff = asyncWrapper(async (req, res, next) => {
 
   if (role === "doctor") {
     const newDoctor = await Doctor.create({ user: user._id, ...profileData });
+
+    updateDoctorEmbedding(user, newDoctor);
   }
 
   const { password: _, ...userWithoutPassword } = user.toObject();
