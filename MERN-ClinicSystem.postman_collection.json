@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "0bde7894-a961-47e1-84c7-481310035d00",
-    "name": "MERN-ClinicSystem Copy",
+    "_postman_id": "5abd8228-8952-4b45-8f4b-7a5cf6620565",
+    "name": "MERN-ClinicSystem",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "37985584"
+    "_exporter_id": "40445479"
   },
   "item": [
     {
@@ -337,7 +337,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "// {\r\n//   \"name\": \"TLegend\",\r\n//   \"email\": \"tlegend@gmail.com\",\r\n//   \"password\": \"Lg123465789\",\r\n//   \"phone\": \"01234567891\",\r\n//   \"role\": \"doctor\",\r\n//   \"specialization\": \"Cardiology\",\r\n//   \"addresses\": [\"Grove ST\", \"Alexandria\"],\r\n//   \"fees\": 300\r\n// }\r\n",
+              "raw": "{\r\n  \"name\": \"TLegend\",\r\n  \"email\": \"tlegend@gmail.com\",\r\n  \"password\": \"Lg123465789\",\r\n  \"phone\": \"01234567891\",\r\n  \"bloodType\": \"A+\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -603,22 +603,31 @@
       "name": "Admin",
       "item": [
         {
-          "name": "Toggle User Status",
+          "name": "Create Staff",
           "request": {
             "auth": {
               "type": "bearer",
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkMTdmMTY3MDMwZGUyMDBkMzkyMyIsImVtYWlsIjoibGVnZW5kQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDY5NjIyMywiZXhwIjoxNzgwNjk5ODIzfQ.B3A69Gz3lNRpPk6vYQUbMZyPozMmG0BTXug3QUWdVEI",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjg2Y2MwNGYxZDUxMDlkM2FkMzljZCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3ODEwMzUxNDMsImV4cCI6MTc4MTAzODc0M30.eyUvuBU_L7zwoGAosMRlVR5moFyB4qnzKQtL7kGpxYs",
                   "type": "string"
                 }
               ]
             },
-            "method": "PATCH",
+            "method": "POST",
             "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//   \"name\": \"TLegend\",\r\n//   \"email\": \"dactor@gmail.com\",\r\n//   \"password\": \"Lg123465789\",\r\n//   \"phone\": \"01234567891\",\r\n//   \"role\": \"doctor\",\r\n//   \"specialization\": \"Cardiology\",\r\n//   \"addresses\": [\"Grove ST\", \"Alexandria\"],\r\n//   \"mainClinic\": \"Grove ST\",\r\n//   \"fees\": 300\r\n// }\r\n{\r\n  \"name\": \"TLegend\",\r\n  \"email\": \"adm3n@gmail.com\",\r\n  \"password\": \"Lg123465789\",\r\n  \"phone\": \"01234567891\",\r\n  \"role\": \"admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
             "url": {
-              "raw": "http://localhost:5000/api/admin/6a230c51c7dddbeb6a6a77c6",
+              "raw": "http://localhost:5000/api/admin",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -626,8 +635,7 @@
               "port": "5000",
               "path": [
                 "api",
-                "admin",
-                "6a230c51c7dddbeb6a6a77c6"
+                "admin"
               ]
             }
           },
@@ -659,6 +667,37 @@
                 "api",
                 "admin",
                 ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle User Status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkMTdmMTY3MDMwZGUyMDBkMzkyMyIsImVtYWlsIjoibGVnZW5kQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDY5NjIyMywiZXhwIjoxNzgwNjk5ODIzfQ.B3A69Gz3lNRpPk6vYQUbMZyPozMmG0BTXug3QUWdVEI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/admin/6a230c51c7dddbeb6a6a77c6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "admin",
+                "6a230c51c7dddbeb6a6a77c6"
               ]
             }
           },
