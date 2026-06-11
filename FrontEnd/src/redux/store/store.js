@@ -7,6 +7,7 @@ import medicalRecordReducer from '../slices/medicalRecordSlice';
 import adminReducer from './../slices/adminSlice';
 import updateProfileReducer from '../slices/userProfileSlice';
 import paymentReducer from "./../slices/paymentSlice"
+import notificationReducer from './../slices/notificationSlice'
 
 export const clinicalSystemStore = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ export const clinicalSystemStore = configureStore({
         admin: adminReducer,
         updateProfile: updateProfileReducer,
         payment: paymentReducer,
+        notifications: notificationReducer,
     },
 });
 
