@@ -5,6 +5,7 @@ import httpStatus from "../utils/httpStatus.js";
 import appError from "../utils/appError.js";
 import { createNotification } from "../utils/createNotification.js";
 import { updateDoctorEmbedding } from "../utils/ragService.js";
+import mongoose from "mongoose";
 
 export const createStaff = asyncWrapper(async (req, res, next) => {
   const { name, email, password, phone, role, ...profileData } = req.body;
@@ -37,20 +38,40 @@ export const createStaff = asyncWrapper(async (req, res, next) => {
     return next(appError.create("User already exists", 409, httpStatus.FAIL));
   }
 
-  const user = await User.create({ name, email, password, phone, role });
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (role === "doctor") {
-    const newDoctor = await Doctor.create({ user: user._id, ...profileData });
+  try {
+    const [user] = await User.create([{ name, email, password, phone, role }], {
+      session,
+    });
 
-    updateDoctorEmbedding(user, newDoctor);
+    let newDoctor;
+
+    if (role === "doctor") {
+      [newDoctor] = await Doctor.create([{ user: user._id, ...profileData }], {
+        session,
+      });
+    }
+
+    await session.commitTransaction();
+    session.endSession();
+
+    if (role === "doctor" && newDoctor) {
+      updateDoctorEmbedding(user, newDoctor);
+    }
+
+    const { password: _, ...userWithoutPassword } = user.toObject();
+
+    res.status(201).json({
+      success: httpStatus.SUCCESS,
+      data: { user: userWithoutPassword },
+    });
+  } catch (e) {
+    await session.abortTransaction();
+    session.endSession();
+    next(e);
   }
-
-  const { password: _, ...userWithoutPassword } = user.toObject();
-
-  res.status(201).json({
-    success: httpStatus.SUCCESS,
-    data: { user: userWithoutPassword },
-  });
 });
 
 export const toggleUserStatus = asyncWrapper(async (req, res, next) => {
