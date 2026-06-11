@@ -716,7 +716,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkYzQ2MTY3MDMwZGUyMDBkMzkyNSIsImVtYWlsIjoibHBAZ21haWwuY29tIiwicm9sZSI6InBhdGllbnQiLCJpYXQiOjE3ODExNjgxNDYsImV4cCI6MTc4MTE3MTc0Nn0.x0Gs4BLI4reV1hnVsz9iI3NNTui-lwWMq8l3m1I7rpw",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkYzQ2MTY3MDMwZGUyMDBkMzkyNSIsImVtYWlsIjoibHBAZ21haWwuY29tIiwicm9sZSI6InBhdGllbnQiLCJpYXQiOjE3ODExNzE4MDAsImV4cCI6MTc4MTE3NTQwMH0.hVxhbbRIEgXk6ckVGBfzKKnRS-BlaZQHmwVzKMTsyj8",
                   "type": "string"
                 }
               ]
@@ -725,7 +725,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"message\": \"تعبان يا كابتن\"\r\n}",
+              "raw": "{\r\n    \"message\": \"My eyes are hurting me\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
