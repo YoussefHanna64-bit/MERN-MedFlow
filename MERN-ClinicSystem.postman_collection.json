@@ -435,7 +435,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkMTdmMTY3MDMwZGUyMDBkMzkyMyIsImVtYWlsIjoibGVnZW5kQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc4MDY4MzAxOSwiZXhwIjoxNzgwNjg2NjE5fQ.bASCP25Y5Xew32ML6GuzAzsHJEn3zdG9Qp-BvwOVWYE",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMjg3MTMwYmRlZDY0YTQxYTg1YjRmMiIsImVtYWlsIjoiYWRtM25AZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzgxMTExMTE1LCJleHAiOjE3ODExMTQ3MTV9.TsuSwQTS5qNGKf0qv_3NruyK_576mrCCd8kf4iBfqeg",
                   "type": "string"
                 }
               ]
@@ -444,7 +444,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"name\": \"Dr. Filo Fouad\",\r\n  \"phone\": \"01012345678\",\r\n  \"fees\": 200,\r\n  \"specialization\": \"Cardiology & Interventional Medicine\",\r\n  \"addresses\": [\r\n    \"123 Main St, City\",\r\n    \"456 New Clinic Ave, New Cairo\"\r\n  ]\r\n}",
+              "raw": "{\r\n    \"fees\": 500\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -452,7 +452,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/user/6a230c51c7dddbeb6a6a77c6",
+              "raw": "http://localhost:5000/api/user/6a29a06b8922af6dd67fd572",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -461,7 +461,7 @@
               "path": [
                 "api",
                 "user",
-                "6a230c51c7dddbeb6a6a77c6"
+                "6a29a06b8922af6dd67fd572"
               ]
             }
           },
@@ -698,6 +698,50 @@
                 "api",
                 "admin",
                 "6a230c51c7dddbeb6a6a77c6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Chat With AI",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMTFkYzQ2MTY3MDMwZGUyMDBkMzkyNSIsImVtYWlsIjoibHBAZ21haWwuY29tIiwicm9sZSI6InBhdGllbnQiLCJpYXQiOjE3ODExNjgxNDYsImV4cCI6MTc4MTE3MTc0Nn0.x0Gs4BLI4reV1hnVsz9iI3NNTui-lwWMq8l3m1I7rpw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"message\": \"تعبان يا كابتن\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/chat",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "chat"
               ]
             }
           },
