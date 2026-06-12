@@ -5,7 +5,7 @@ import AppointmentsHeader from "./appointmentsHeader";
 const UpcomingAppointments = () => {
   return (
     <>
-      <div className="bg-white mt-5 p-8 shadow-lg rounded-xl">
+      <div className="bg-white/30 mt-5 p-8 shadow-lg rounded-xl">
         <UpcomingHeader />
         <AppointmentsHeader />
         <AppointmentCardList />

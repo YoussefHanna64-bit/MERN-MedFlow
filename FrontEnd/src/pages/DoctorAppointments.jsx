@@ -13,7 +13,7 @@ const DoctorAppointments = () => {
           </div>
           <Link
             to="/doctor-availability"
-            className="flex items-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-teal-700 hover:-translate-y-0.5"
+            className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-primary to-[#00a3ac] px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-teal-700 hover:-translate-y-0.5"
           >
             <span>📅</span>
             Manage Availability
