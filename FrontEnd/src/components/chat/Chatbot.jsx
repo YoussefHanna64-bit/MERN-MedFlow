@@ -1,15 +1,20 @@
 import { addMessage, sendMessage } from "@/redux/slices/chatbotSlice";
 import { MessageCircleMore, SendHorizontal, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ChatMessage from "./ChatMessage";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
+  const lastMessageRef = useRef(null);
 
   const dispatch = useDispatch();
   const { messages, loading } = useSelector((state) => state.chatbot);
+
+  useEffect(() => {
+    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -64,6 +69,7 @@ const Chatbot = () => {
                 </div>
               </div>
             )}
+            <div ref={lastMessageRef} />
           </div>
 
           <form
