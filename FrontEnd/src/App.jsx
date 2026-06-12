@@ -20,11 +20,13 @@ const DoctorAvailabilityPage = lazy(
   () => import("./pages/DoctorAvailabilityPage"),
 );
 const BookAppointmentForm = lazy(() => import("./pages/BookAppointmentForm"));
-const FindDoctorPage = lazy(() => import("./pages/findDoctor/FindDoctorPage"));
+const FindDoctorPage = lazy(() => import("./pages/FindDoctorPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 const PatientHomePage = lazy(() => import("./pages/PatientHomePage"));
 const PatientRecordsPage = lazy(() => import("./pages/PatientRecordsPage"));
 const UpdateProfilePage = lazy(() => import("./pages/UpdateProfilePage"));
+const MedicalRecordForm = lazy(() => import("./pages/CreateRecordPage"));
+const DoctorRecordsPage = lazy(() => import("./pages/DoctorRecordsPage"));
 
 const routerCofig = createBrowserRouter([
   {
@@ -42,6 +44,11 @@ const routerCofig = createBrowserRouter([
             path: "patient-home",
             element: <PatientHomePage />,
           },
+          {
+            path: "create-record",
+            element: <MedicalRecordForm />,
+          },
+          { path: "doctor-records", element: <DoctorRecordsPage /> },
           {
             path: "find-doctor",
             element: <FindDoctorPage />,

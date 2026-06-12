@@ -3,6 +3,7 @@ import {
   createMedicalRecord,
   getPatientRecords,
   generatePrescription,
+  getDoctorRecords,
 } from "../controllers/clinicalController.js";
 import verifyToken from "../middlewares/verifyToken.js";
 import authorize from "../middlewares/authorize.js";
@@ -16,6 +17,13 @@ router.get(
   verifyToken,
   authorize("doctor", "patient"),
   getPatientRecords,
+);
+
+router.get(
+  "/doctor-records",
+  verifyToken,
+  authorize("doctor"),
+  getDoctorRecords
 );
 
 router.post(
