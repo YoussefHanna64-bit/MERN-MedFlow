@@ -1,3 +1,17 @@
+const formatBoldText = (text) => {
+  if (!text) {
+    return null;
+  }
+  const words = text.split(/(\*\*.*?\*\*)/g);
+
+  return words.map((word, index) => {
+    if (word.startsWith("**") && word.endsWith("**")) {
+      return <strong key={index}>{word.slice(2, -2)}</strong>;
+    }
+    return <span key={index}>{word}</span>;
+  });
+};
+
 const ChatMessage = ({ msg }) => {
   const isUser = msg.sender === "user";
   return (
@@ -9,7 +23,7 @@ const ChatMessage = ({ msg }) => {
             : "bg-white border border-gray-200 text-gray-800 rounded-bl-none shadow-sm"
         }`}
       >
-        {msg.text}
+        {formatBoldText(msg.text)}
       </div>
     </div>
   );
