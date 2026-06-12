@@ -5,6 +5,9 @@ import {
 	useElements,
 } from "@stripe/react-stripe-js";
 import { Lock } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { updateAppointment } from "@/redux/slices/userAppointmentsSlice";
+import { useNavigate } from "react-router";
 
 export default function PaymentForm() {
 	const stripe = useStripe();
@@ -12,6 +15,9 @@ export default function PaymentForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const appointmentId = useSelector((state) => state.payment.appointmentId);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -24,7 +30,7 @@ export default function PaymentForm() {
 		const result = await stripe.confirmPayment({
 			elements,
 			confirmParams: {
-				return_url: "http://localhost:5173/",
+				return_url: "http://localhost:5173/patient-home",
 			},
 			redirect: "if_required",
 		});
@@ -38,8 +44,12 @@ export default function PaymentForm() {
 			result.paymentIntent &&
 			result.paymentIntent.status === "succeeded"
 		) {
+			dispatch(updateAppointment({ id: appointmentId, status: "confirmed" }));
 			setIsSuccess(true);
 			setMessage("Payment successful! Thank you for your purchase.");
+			setTimeout(() => {
+				navigate("/patient-home");
+			}, 2000);
 		}
 	};
 

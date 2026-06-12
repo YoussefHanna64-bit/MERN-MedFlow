@@ -32,7 +32,9 @@ const PatientHomePage = () => {
 
       <MeetOurTeam doctors={doctors} isLoading={isLoading} error={error} />
 
-      <Services />
+      <div id="service">
+        <Services />
+      </div>
 
       <Stats />
 

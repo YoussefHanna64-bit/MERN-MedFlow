@@ -55,10 +55,10 @@ const userAppointmentSlice = createSlice({
     reducers: {
         updateAppointment: (state, action) => {
             const index = state.userAppointments.findIndex(
-                (app) => app.id === action.payload.id
+                (app) => app._id === action.payload.id || app.id === action.payload.id
             );
             if (index !== -1) {
-                state.userAppointments[index] = action.payload;
+                state.userAppointments[index].status = action.payload.status;
             }
         },
     },
