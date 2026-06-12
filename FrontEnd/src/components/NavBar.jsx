@@ -36,10 +36,10 @@ export default function NavBar() {
 
 	// Fetch notifications on component mount if authenticated
 	useEffect(() => {
-		if (isAuthenticated && user?.role === "patient") {
+		if (isAuthenticated) {
 			dispatch(fetchNotifications());
 		}
-	}, [isAuthenticated, dispatch, user?.role]);
+	}, [isAuthenticated, dispatch]);
 
 	const handleLogout = () => {
 		dispatch(logout());
