@@ -5,6 +5,7 @@ import MeetOurTeam from "../components/homeComponents/MeetOurTeam";
 import Services from "../components/homeComponents/Services";
 import Stats from "../components/homeComponents/Stats";
 import { fetchDoctors } from "../redux/thunks/doctor/fetchDoctors";
+import Chatbot from "@/components/chat/Chatbot";
 
 const PatientHomePage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -34,6 +35,8 @@ const PatientHomePage = () => {
       <Services />
 
       <Stats />
+
+      <Chatbot />
     </div>
   );
 };

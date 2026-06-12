@@ -36,7 +36,7 @@ const FindDoctor = () => {
             Find a Doctor
           </button>
           <button
-            onClick={() => handleNavigation("/book-appointment")}
+            onClick={() => handleNavigation("/patient-appointments")}
             className={`${btnStyle} bg-[#E6F3F3] text-[#008484] hover:bg-[#d0ecec]`}
           >
             Appointments

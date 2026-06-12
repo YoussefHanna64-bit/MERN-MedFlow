@@ -39,7 +39,7 @@ const AppointmentCardList = () => {
   return (
     <>
       {appointments.length == 0 && (
-        <div className="bg-primary/50 p-2 rounded-b-xl text-center">
+        <div className="bg-linear-to-r from-primary/80 to-[#00bdc7] p-2 rounded-b-xl   text-center">
           <span className="font-semibold">
             There is no upcoming appointments for you!
           </span>

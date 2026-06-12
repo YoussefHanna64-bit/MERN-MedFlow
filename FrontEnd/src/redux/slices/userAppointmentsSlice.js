@@ -70,7 +70,9 @@ const userAppointmentSlice = createSlice({
         ).addCase(fetchPatientAppointments.fulfilled, (state, action) => {
             state.loading = false
             state.success = true
-            state.userAppointments = action.payload
+            state.userAppointments = [...action.payload].sort(
+                (a, b) => (a.status === "cancelled") - (b.status === "cancelled")
+            );
         }
         ).addCase(fetchPatientAppointments.rejected, (state, action) => {
             state.loading = false;
@@ -83,7 +85,9 @@ const userAppointmentSlice = createSlice({
         ).addCase(fetchDoctorAppointments.fulfilled, (state, action) => {
             state.loading = false
             state.success = true
-            state.userAppointments = action.payload
+            state.userAppointments = [...action.payload].sort(
+                (a, b) => (a.status === "cancelled") - (b.status === "cancelled")
+            );
         }
         ).addCase(fetchDoctorAppointments.rejected, (state, action) => {
             state.loading = false;

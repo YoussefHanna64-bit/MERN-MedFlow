@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import { fetchDoctorAvailability } from "../redux/thunks/doctor/fetchDoctorAvailability";

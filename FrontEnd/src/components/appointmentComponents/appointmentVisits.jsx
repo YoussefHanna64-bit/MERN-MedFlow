@@ -1,14 +1,11 @@
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const AppointmentVisits = () => {
   const { userAppointments } = useSelector((state) => state.userAppointments);
-  useEffect(() => {
-    console.log(userAppointments.length + " ---------------------- ");
-  }, [userAppointments]);
+
   return (
     <>
-      <div className="bg-linear-to-l from-primary to-primary/33 p-5 shadow-lg rounded-xl">
+      <div className="bg-linear-to-r from-primary/80 to-[#00bdc7] p-5 shadow-lg rounded-xl">
         <div className="flex gap-2 items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"

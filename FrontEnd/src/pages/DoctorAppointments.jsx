@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import UpcomingAppointments from "../components/appointmentComponents/upcomingAppointments";
 import AppointmentGreetingHeader from "../components/appointmentComponents/appointmentGreetingHeader";
 import AppointmentVisits from "../components/appointmentComponents/appointmentVisits";
-import { FileText, Calendar as CalendarIcon } from "lucide-react"; // Import Icons
+import { FileText } from "lucide-react";
 
 const DoctorAppointments = () => {
   return (
@@ -14,6 +14,7 @@ const DoctorAppointments = () => {
           </div>
 
           <div className="flex items-center gap-4">
+            {/* YOUR Feature: Patient Records Button */}
             <Link
               to="/doctor-records"
               className="flex items-center gap-2 rounded-2xl bg-white border-2 border-[#E6F3F3] text-[#008484] px-6 py-3 text-sm font-semibold shadow-sm transition duration-200 hover:bg-[#E6F3F3] hover:border-[#008484]"
@@ -22,11 +23,12 @@ const DoctorAppointments = () => {
               Patient Records
             </Link>
 
+            {/* FRIEND'S Feature: Manage Availability Button */}
             <Link
               to="/doctor-availability"
-              className="flex items-center gap-2 rounded-2xl bg-[#008484] px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-teal-700 hover:-translate-y-0.5"
+              className="flex items-center gap-2 rounded-2xl bg-linear-to-r from-primary to-[#00a3ac] px-6 py-3 text-sm font-semibold text-white shadow-md transition duration-200 hover:bg-teal-700 hover:-translate-y-0.5"
             >
-              <CalendarIcon className="w-4 h-4" />
+              <span>📅</span>
               Manage Availability
             </Link>
           </div>

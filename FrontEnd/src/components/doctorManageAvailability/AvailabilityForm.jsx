@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TimeSlotInput from "./TimeSlotInput";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
