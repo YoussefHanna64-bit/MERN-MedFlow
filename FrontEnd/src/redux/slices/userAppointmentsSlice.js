@@ -43,6 +43,24 @@ export const cancelAppointment = createAsyncThunk(
     }
 );
 
+export const updateAppointment = createAsyncThunk(
+    "appointments/update",
+    async ({ id, status, paymentStatus, stripeSessionId }, { rejectWithValue }) => {
+        try {
+            const response = await api.patch(`/appointment/update/${id}`, {
+                status,
+                paymentStatus,
+                stripeSessionId,
+            });
+            return response.data.data;
+        } catch (error) {
+            return rejectWithValue(
+                error.response?.data?.message || "Failed to update appointment"
+            );
+        }
+    }
+);
+
 
 const userAppointmentSlice = createSlice({
     name: "UserAppointments",
@@ -53,14 +71,14 @@ const userAppointmentSlice = createSlice({
         success: false
     },
     reducers: {
-        updateAppointment: (state, action) => {
-            const index = state.userAppointments.findIndex(
-                (app) => app._id === action.payload.id || app.id === action.payload.id
-            );
-            if (index !== -1) {
-                state.userAppointments[index].status = action.payload.status;
-            }
-        },
+        // updateAppointment: (state, action) => {
+        //     const index = state.userAppointments.findIndex(
+        //         (app) => app._id === action.payload.id || app.id === action.payload.id
+        //     );
+        //     if (index !== -1) {
+        //         state.userAppointments[index].status = action.payload.status;
+        //     }
+        // },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchPatientAppointments.pending, (state) => {
@@ -111,11 +129,28 @@ const userAppointmentSlice = createSlice({
             .addCase(cancelAppointment.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            }).addCase(updateAppointment.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateAppointment.fulfilled, (state, action) => {
+                state.loading = false;
+                const updated = action.payload;
+                const index = state.userAppointments.findIndex(
+                    (app) => app._id === updated._id
+                );
+                if (index !== -1) {
+                    state.userAppointments[index] = { ...state.userAppointments[index], ...updated };
+                }
+            })
+            .addCase(updateAppointment.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     }
 
 })
 
-export const { updateAppointment } = userAppointmentSlice.actions
+// export const { } = userAppointmentSlice.actions
 export default userAppointmentSlice.reducer;
 
