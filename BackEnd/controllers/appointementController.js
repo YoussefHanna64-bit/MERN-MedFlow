@@ -261,3 +261,37 @@ export const cancelAppointment = asyncWrapper(async (req, res, next) => {
     message: "Appointment cancelled successfully",
   });
 });
+
+
+export const updateAppointment = asyncWrapper(async (req, res, next) => {
+  const { status, paymentStatus, stripeSessionId } = req.body;
+
+  const appointment = await Appointment.findById(req.params.id);
+
+  if (!appointment)
+    return next(appError.create("Appointment not found", 404, httpStatus.FAIL));
+
+  const isPatient = appointment.patient.toString() === req.user.id;
+
+  let isDoctor = false;
+  if (!isPatient) {
+    const doctorProfile = await DoctorProfile.findOne({ user: req.user.id });
+    isDoctor =
+      doctorProfile &&
+      appointment.doctor.toString() === doctorProfile._id.toString();
+  }
+
+  if (!isPatient && !isDoctor)
+    return next(appError.create("Unauthorized", 403, httpStatus.FAIL));
+
+  if (status) appointment.status = status;
+  if (paymentStatus) appointment.paymentStatus = paymentStatus;
+  if (stripeSessionId) appointment.stripeSessionId = stripeSessionId;
+
+  await appointment.save();
+
+  res.status(200).json({
+    success: httpStatus.SUCCESS,
+    data: appointment,
+  });
+});
