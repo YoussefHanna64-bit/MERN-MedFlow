@@ -6,7 +6,7 @@ export const fetchNotifications = createAsyncThunk(
     async (_, { rejectWithValue }) => {
         try {
             const response = await api.get("/notifications/");
-            return response.data.data;
+            return response.data.data.notifications;
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message || "Failed to fetch notifications"
@@ -20,7 +20,8 @@ export const markNotificationAsRead = createAsyncThunk(
     async (notificationId, { rejectWithValue }) => {
         try {
             const response = await api.patch(`/notifications/${notificationId}/read`);
-            return response.data.data;
+            // API returns data.notification (singular)
+            return response.data.data.notification;
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message || "Failed to mark notification as read"
@@ -33,8 +34,10 @@ export const markAllNotificationsAsRead = createAsyncThunk(
     "notifications/markAllAsRead",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await api.patch("/notifications/allread");
-            return response.data.data;
+            await api.patch("/notifications/allread");
+            // API doesn't return notifications, so fetch them to update state
+            const response = await api.get("/notifications/");
+            return response.data.data.notifications;
         } catch (error) {
             return rejectWithValue(
                 error.response?.data?.message || "Failed to mark all notifications as read"
@@ -68,27 +71,45 @@ const notificationSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.notifications = Array.isArray(action.payload) ? action.payload : [];
-                state.unreadCount = Array.isArray(action.payload) ? action.payload.filter(n => !n.read).length : 0;
+                state.unreadCount = Array.isArray(action.payload) ? action.payload.filter(n => !n.isRead).length : 0;
             })
             .addCase(fetchNotifications.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.success = false;
             })
+            .addCase(markNotificationAsRead.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
             .addCase(markNotificationAsRead.fulfilled, (state, action) => {
-                const notification = state.notifications.find(n => n._id === action.payload._id);
-                if (notification) {
-                    notification.read = true;
-                    state.unreadCount = Math.max(0, state.unreadCount - 1);
+                state.loading = false;
+                // API returns single notification, update it in the list
+                if (action.payload && action.payload._id) {
+                    const notification = state.notifications.find(n => n._id === action.payload._id);
+                    if (notification) {
+                        notification.isRead = true;
+                        state.unreadCount = Math.max(0, state.unreadCount - 1);
+                    }
                 }
+            })
+            .addCase(markNotificationAsRead.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             })
             .addCase(markAllNotificationsAsRead.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
+            .addCase(markAllNotificationsAsRead.fulfilled, (state, action) => {
                 state.loading = false;
-                state.notifications = state.notifications.map(n => ({ ...n, read: true }));
+                // API returns updated notifications array after fetching
+                if (Array.isArray(action.payload)) {
+                    state.notifications = action.payload;
+                } else {
+                    // Fallback: mark all local notifications as read
+                    state.notifications = state.notifications.map(n => ({ ...n, isRead: true }));
+                }
                 state.unreadCount = 0;
             })
             .addCase(markAllNotificationsAsRead.rejected, (state, action) => {
