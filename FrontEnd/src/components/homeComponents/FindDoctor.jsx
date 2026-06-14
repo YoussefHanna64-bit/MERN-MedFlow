@@ -1,16 +1,20 @@
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const FindDoctor = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  const handleNavigation = (path) => {
-    if (isAuthenticated) {
-      navigate(path);
-    } else {
+  const handleProtectedAction = (path) => {
+    if (!isAuthenticated) {
+      toast.error("You must be logged in to access this page.", {
+        id: "auth-guard-toast",
+      });
       navigate("/login");
+    } else {
+      navigate(path);
     }
   };
 
@@ -30,20 +34,20 @@ const FindDoctor = () => {
         </div>
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <button
-            onClick={() => handleNavigation("/find-doctor")}
+            onClick={() => handleProtectedAction("/find-doctor")}
             className={`${btnStyle} bg-[#008484] text-white hover:bg-teal-700 shadow-md`}
           >
             Find a Doctor
           </button>
           <button
-            onClick={() => handleNavigation("/patient-appointments")}
+            onClick={() => handleProtectedAction("/patient-appointments")}
             className={`${btnStyle} bg-[#E6F3F3] text-[#008484] hover:bg-[#d0ecec]`}
           >
             Appointments
           </button>
 
           <button
-            onClick={() => handleNavigation("/patient-records")}
+            onClick={() => handleProtectedAction("/patient-records")}
             className={`${btnStyle} bg-white text-gray-700 border border-gray-200 hover:bg-gray-50`}
           >
             My Records
