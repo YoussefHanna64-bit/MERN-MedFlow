@@ -9,6 +9,8 @@ import {
     updateAppointment
 } from '../controllers/appointementController.js'
 
+const router = express.Router();
+
 router.post("/book", verifyToken, authorize("patient"), bookAppointment)
     .get("/patient/my-bookings", verifyToken, authorize("patient"), getPatientAppointments)
     .get("/doctor/my-bookings", verifyToken, authorize("doctor"), getDoctorAppointements)
