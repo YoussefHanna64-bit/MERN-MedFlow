@@ -30,8 +30,9 @@ const AppointmentVisits = () => {
         <span className="block text-4xl font-bold my-2 text-gray-800">
           {userAppointments.length}
         </span>
-        <div className="flex">
-          <div className=" bg-linear-to-r from-gray-300/80 to-gray-300/50  mt-2 mr-2 p-4 w-2xl rounded-2xl relative transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl">
+        
+        <div className="flex w-full gap-4 mt-4">
+          <div className="bg-linear-to-r from-gray-300/80 to-gray-300/50 p-4 flex-1 rounded-2xl relative transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl">
             <div className="flex gap-2 items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +52,7 @@ const AppointmentVisits = () => {
               </span>
             </div>
             <span className="block text-3xl font-semibold ">5</span>
-            <div className="flex bg-green-300/60 text-green-600 font-semibold rounded-full shadow-xl/30 mb-3 mr-3  px-2 absolute bottom-0 right-0">
+            <div className="flex bg-green-300/60 text-green-600 font-semibold rounded-full shadow-xl/30 mb-3 mr-3 px-2 absolute bottom-0 right-0">
               <span>46%</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +70,8 @@ const AppointmentVisits = () => {
               </svg>
             </div>
           </div>
-          <div className="bg-linear-to-r from-gray-300/80 to-gray-300/50 mt-2 mr-2  p-4 w-2xl  rounded-2xl relative transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl">
+          
+          <div className="bg-linear-to-r from-gray-300/80 to-gray-300/50 p-4 flex-1 rounded-2xl relative transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-xl">
             <div className="flex gap-2 items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +91,7 @@ const AppointmentVisits = () => {
               </span>
             </div>
             <span className="block text-3xl font-semibold">10</span>
-            <div className="flex bg-green-300/60 text-green-600 font-semibold rounded-full shadow-xl/30 mb-3 mr-3  px-2 absolute bottom-0 right-0">
+            <div className="flex bg-green-300/60 text-green-600 font-semibold rounded-full shadow-xl/30 mb-3 mr-3 px-2 absolute bottom-0 right-0">
               <span>52%</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

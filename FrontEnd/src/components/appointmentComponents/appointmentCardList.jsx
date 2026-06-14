@@ -13,20 +13,17 @@ const AppointmentCardList = () => {
   const { role } = useSelector((state) => state.auth);
   const loading = useSelector((state) => state.userAppointments.loading);
   const error = useSelector((state) => state.userAppointments.error);
-  const success = useSelector((state) => state.userAppointments.success);
   const appointments = useSelector(
     (state) => state.userAppointments.userAppointments ?? [],
   );
 
   useEffect(() => {
-    if (!success) {
-      if (role == "doctor") {
-        dispatch(fetchDoctorAppointments());
-      } else {
-        dispatch(fetchPatientAppointments());
-      }
+    if (role == "doctor") {
+      dispatch(fetchDoctorAppointments());
+    } else {
+      dispatch(fetchPatientAppointments());
     }
-  }, [dispatch, success]);
+  }, [dispatch, role]);
 
   if (loading) return <Spinner height="h-20" color="border-primary" />;
   if (error)

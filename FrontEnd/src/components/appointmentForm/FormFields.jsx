@@ -48,10 +48,6 @@ const FormFields = ({
     console.log(inputData);
   }, [inputData]);
 
-  useEffect(() => {
-    console.log(inputData);
-    console.log(doctors);
-  }, [doctors]);
 
   useEffect(() => {
     if (passedDoctor) {

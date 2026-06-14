@@ -31,7 +31,7 @@ const DoctorRecordsPage = lazy(() => import("./pages/DoctorRecordsPage"));
 const routerCofig = createBrowserRouter([
   {
     path: "/",
-    element: <Navigate to="/login" replace />,
+    element: <Navigate to="/" replace />,
   },
   {
     element: <MainLayout />,

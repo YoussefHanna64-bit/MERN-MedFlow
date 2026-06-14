@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { cancelAppointment } from "../../redux/slices/userAppointmentsSlice";
@@ -31,8 +31,14 @@ const AppointmentCard = ({ appointment, isLast }) => {
     navigate("/payment");
   };
 
-  const appointmentUsername =
-    role === "doctor" ? appointment.patient.name : appointment.doctor.name;
+  const appointmentUsername = (() => {
+    if (role === "doctor") {
+      return (
+        appointment.patient?.name || appointment.patient?.user?.name || "—"
+      );
+    }
+    return appointment.doctor?.name || appointment.doctor?.user?.name || "—";
+  })();
 
   return (
     <div

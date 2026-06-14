@@ -5,7 +5,6 @@ const AppointmentGreetingHeader = () => {
   const { role, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log(role + " ---------------------- " + user.name);
   }, [role, user]);
 
   const greetingText = role === "doctor" ? "Good Morning" : "Welcome Back";
